@@ -10,7 +10,7 @@ const cors=require('cors')
 const db_model=require('./db/db_model.js')
 const saveUserDetail =require('./routes/admin/userDetails.js');
 const signupAndLogin=require('./routes/customer/signupAndLogin.js')
-
+const decrypt = require('./utilities/decrypt');
 
 
 
