@@ -9,10 +9,10 @@ const ImageModal = (props) => {
                 onHide={props.handleClose}
                 backdrop="static"
                 keyboard={false}
-                className={classes.LargeModal}
+                dialogClassName="cheque-image"
             >
                 <Modal.Header className={classes.ModalHeader}>
-                    <Modal.Title>Images</Modal.Title>
+                    <Modal.Title>Cheque Images</Modal.Title>
                     <i className="fa fa-times" aria-hidden="true" onClick={props.handleClose}></i>
                 </Modal.Header>
                 <Modal.Body>
