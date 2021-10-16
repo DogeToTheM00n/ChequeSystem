@@ -37,7 +37,7 @@ async function saveUserDetail(req,res){
             balance: req.body.balance,
             accountHolderSignature: req.files[0],
             ifscCode: req.body.ifscCode,
-            chequeCodeArray: [],
+            chequeCodeArray: req.body.chequeCodeArray,
         })
         userDetail.save((err)=>{
             //console.log(userDetail.accountHolderSignature.buffer)

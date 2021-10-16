@@ -46,7 +46,7 @@ const customerSchema = new Schema({
         type: String,
         required: true
     },
-    ChequeIdArray: [String]
+    chequeIdArray: [String]
 })
 
 const chequeSchema = new Schema({
@@ -83,7 +83,7 @@ const chequeSchema = new Schema({
         required: false
     },
     chequePhotographs: {
-        type: [imageSchema],
+        type: [Buffer],
         required: true
     },
     _id: {                   // id format==username@count
@@ -92,7 +92,8 @@ const chequeSchema = new Schema({
     },
     chequeStatus: {
         type: Number, // 0== failed, 1==success, 2==Pending
-        required: true
+        required: true,
+        default:2
     }
 
 })

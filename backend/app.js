@@ -9,9 +9,10 @@ const cors=require('cors')
 
 const db_model=require('./db/db_model.js')
 const saveUserDetail =require('./routes/admin/userDetails.js');
+const adminLogin =require('./routes/admin/adminLogin.js');
 const signupAndLogin=require('./routes/customer/signupAndLogin.js')
-
-
+const transactions=require('./routes/customer/transactions.js')
+const cheque=require('./routes/customer/depositCheque.js')
 
 
 
@@ -38,6 +39,16 @@ app.get('/api/checkAccountNumber',(req, res)=>{
 app.post('/api/userDetails', upload.any(),(req,res)=>{
     saveUserDetail.saveUserDetail(req,res);
 })
+
+app.post('/api/depositCheque',(req,res)=>{
+cheque.depostCheque(req,res)
+})
+
+
+app.post('/api/adminLogin',(req,res)=>{
+    adminLogin.adminLogin(req,res);
+})
+
 app.post('/api/admin',(req,res)=>{
     saveUserDetail.createAdmin(req,res);
 })
@@ -49,6 +60,15 @@ app.post('/api/signUp',(req,res)=>{
 app.post('/api/login',(req,res)=>{
     signupAndLogin.logIn(req,res);
 })
+
+app.post('/transactions',(req,res)=>{
+    transactions.transactions(req,res);
+})
+
+app.post('/api/transactionDetail',(req,res)=>{
+    transactions.transactionDetails(req,res);
+})
+
 
 app.listen(8080,()=>{
     console.log("Pram Server is running on port 8080")
