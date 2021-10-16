@@ -1,5 +1,7 @@
 .Footer{
-    text-align: right;
     margin: 5vh 2vw;
     color: #871f42;
+    position: absolute;
+    bottom: 0;
+    right: 1vw;
 }
