@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import classes from "./SignUp.module.css";
 import Form from "react-bootstrap/Form";
+import encryptWithServerPublicKey from "../../../../utilities/encrypt";
+import { connect } from "react-redux";
+import axios from "../../../../chequeAxios";
 
 class SignUp extends Component {
   state = {
@@ -90,7 +93,27 @@ class SignUp extends Component {
       !this.state.IFSCCodeErr &&
       !this.state.secondReqErr
     ) {
-      console.log("Submitted");
+      const data = {
+        username: this.state.username,
+        password: this.state.password,
+        name: this.state.name,
+        mobileNumber: this.state.contact,
+        accountNumber: this.state.account,
+        ifscCode: this.state.IFSCCode,
+      };
+      console.log(JSON.stringify(data));
+      const encryptedData = encryptWithServerPublicKey(
+        data,
+        this.props.server_public_key
+      ).then((encryptedData) => {
+        const req = async () => {
+          const res = await axios.post('/api/signup', {obj: encryptedData})
+          if(res.data){
+            this.props.changeAuthMethod()
+          }
+        };
+        req()
+      });
     }
   };
   render() {
@@ -243,4 +266,8 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+const mapStateToProps = (state) => {
+  return { server_public_key: state.key };
+};
+
+export default connect(mapStateToProps)(SignUp);

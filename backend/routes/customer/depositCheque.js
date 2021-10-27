@@ -1,5 +1,5 @@
 const db_model = require('../../db/db_model.js')
-const endcrypt = require('../../encryptAndDecrypt/endcrypt.js')
+
 
 
 function CountDocuments(username) {
@@ -62,24 +62,6 @@ function checkMICRCode(username, code) {
 
 async function depostCheque(req, res) {
 
-    const algorithm = "aes-256-cbc";
-
-    // generate 16 bytes of random data
-    const initVector = crypto.randomBytes(16);
-
-
-
-
-    // secret key generate 32 bytes of random data
-    const Securitykey = crypto.randomBytes(32);
-    const aes_key = process.env.AES_KEY
-    const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
-    //decryptedImages = []
-
-    let decryptedData = decipher.update(req.body.obj, "hex", "utf-8");
-
-    decryptedData += decipher.final("utf8");
-    const decryptedObject = JSON.parse(decryptedData);
 
     var decryptedPhotos=[]
     const flag = await checkMICRCode(username, decryptedObject.chequeCode)

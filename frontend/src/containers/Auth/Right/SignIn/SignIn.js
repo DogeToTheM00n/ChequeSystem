@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+import encryptWithServerPublicKey from "../../../../utilities/encrypt";
 import classes from "./SignIn.module.css";
+import { connect } from "react-redux";
+import axios from "../../../../chequeAxios";
 import Form from "react-bootstrap/Form";
+import decrypt from "../../../../utilities/decrypt";
 
 class SignIn extends Component {
   state = {
@@ -13,6 +17,28 @@ class SignIn extends Component {
   submit = (event) => {
     if (this.state.username !== "" && this.state.password !== "") {
       event.preventDefault();
+      const data = {
+        username: this.state.username,
+        password: this.state.password,
+      };
+      console.log(JSON.stringify(data));
+      encryptWithServerPublicKey(data, this.props.server_public_key).then(
+        (encryptedData) => {
+          const req = async () => {
+            const res = await axios.post("/api/login", {
+              obj: encryptedData,
+              frontendPublicKey: this.props.clientPublicKey,
+            });
+            if (res.data) {
+              console.log(res.data)
+              decrypt(res.data.obj).then((decryptedData) => {
+                console.log(decryptedData);
+              });
+            }
+          };
+          req();
+        }
+      );
     }
   };
   render() {
@@ -63,4 +89,11 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn;
+const mapStateToProps = (state) => {
+  return {
+    server_public_key: state.key,
+    clientPublicKey: state.clientPublicKey,
+  };
+};
+
+export default connect(mapStateToProps)(SignIn);
