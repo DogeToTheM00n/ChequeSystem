@@ -3,20 +3,28 @@ import classes from "./Left.module.css";
 import Div1 from "./Div1/Div1";
 import Div2 from "./Div2/Div2";
 import Div3 from "./Div3/Div3";
+import { useState, useEffect } from "react";
 
-class Left extends Component {
-  state = {
-    div: 3,
-  };
-  render() {
-    return (
-      <div className={classes.Left}>
-        {this.state.div === 1 && <Div1 />}
-        {this.state.div === 2 && <Div2 />}
-        {this.state.div === 3 && <Div3 />}
-      </div>
-    );
-  }
+const Left = (props) => {
+  const [state, setState] = useState({
+    accountVerify: 0,
+    amount: "",
+    accountNumber: "",
+    err: "",
+  })
+  const [div, setDiv] = useState(1);
+  useEffect(() => {
+    if (state.err==="" && state.accountVerify === 1) {
+      setDiv(3)
+    }
+  }, [state.err]);
+  return (
+    <div className={classes.Left}>
+      {div === 1 && <Div1 setDiv={setDiv} />}
+      {div === 2 && <Div2 setDiv={setDiv} state={state} setState={setState} />}
+      {div === 3 && <Div3 setDiv={setDiv} />}
+    </div>
+  );
 }
 
 export default Left;

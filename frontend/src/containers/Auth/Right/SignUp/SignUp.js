@@ -102,18 +102,19 @@ class SignUp extends Component {
         ifscCode: this.state.IFSCCode,
       };
       console.log(JSON.stringify(data));
+      console.log(this.props.server_public_key)
       const encryptedData = encryptWithServerPublicKey(
         data,
         this.props.server_public_key
       ).then((encryptedData) => {
         const req = async () => {
-          const res = await axios.post('/api/signup', {obj: encryptedData})
-          if(res.data){
+          const res = await axios.post('/api/signUp', { obj: encryptedData })
+          if (res.data) {
             this.props.changeAuthMethod()
           }
         };
         req()
-      });
+      })
     }
   };
   render() {
