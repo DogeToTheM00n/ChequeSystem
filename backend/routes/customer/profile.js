@@ -2,7 +2,7 @@ const db_model=require('../../db/db_model.js')
 
 function getUserDetail(username){
     return new Promise(resolve=>{
-        db_model.findOne({username:username},(err,result)=>{
+        db_model.customerModel.findOne({username:username},(err,result)=>{
             if(err) return err;
             const obj ={
                 accountNumber: result.accountNumber,

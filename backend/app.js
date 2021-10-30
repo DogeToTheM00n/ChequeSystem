@@ -10,6 +10,7 @@ const cors = require('cors')
 const db_model = require('./db/db_model.js')
 const saveUserDetail = require('./routes/admin/userDetails.js');
 const adminLogin = require('./routes/admin/adminLogin.js');
+const profile= require('./routes/customer/profile.js');
 const signupAndLogin = require('./routes/customer/signupAndLogin.js')
 const transactions = require('./routes/customer/transactions.js')
 const cheque = require('./routes/customer/depositCheque.js')
@@ -76,6 +77,9 @@ app.post('/api/transactionDetail', (req, res) => {
     transactions.transactionDetails(req, res);
 })
 
+app.get('/api/profile',(req,res)=>{
+    profile.profile(req,res);
+})
 
 // app.post("/abc", upload.any(),(req, res) => {
 //     const f = req.files[0]
