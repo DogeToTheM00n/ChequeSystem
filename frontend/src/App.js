@@ -14,7 +14,6 @@ import React, { Component } from "react";
 class App extends Component {
   componentDidMount() {
     axios.get("/api/getPublicKey").then((res) => {
-      console.log(res.data);
       this.props.setServerPublicKey(res.data);
     });
     generateClientKeyPair().then((clientPublicKey) => {

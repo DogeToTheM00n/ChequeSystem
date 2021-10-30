@@ -1,28 +1,27 @@
 import decrypt from "./decrypt";
+import ab2str from "./arrayBufferToString";
 
-const encryptImageWithAesKey = async (image, key) => {
+const decryptImageWithAesKey = async (encryptedBufferImg, key) => {
   const iv = Uint8Array.from([
     146, 184, 121, 127, 136, 74, 198, 227, 43, 182, 160, 127, 33, 155, 147, 31,
   ]);
   const aesDecryptedKey = JSON.parse(await decrypt(key));
-  const cryptoKey = await window.crypto.subtle.importKey(
+  const cryptoKey = await crypto.subtle.importKey(
     "jwk",
     JSON.parse(aesDecryptedKey),
     { name: "AES-GCM" },
     true,
     ["encrypt", "decrypt"]
   );
-  let enc = new TextEncoder();
-  const encodedImg = enc.encode(JSON.stringify(image));
-  const result = await window.crypto.subtle.encrypt(
+  const result = await crypto.subtle.decrypt(
     {
       name: "AES-GCM",
       iv: iv,
     },
     cryptoKey,
-    image
+    encryptedBufferImg
   );
-  return result;
+  return ab2str(result);
 };
 
-export default encryptImageWithAesKey;
+export default decryptImageWithAesKey;

@@ -40,7 +40,7 @@ async function signUp(req, res) {
   const customer = JSON.parse(await decrypt.decrypt(req.body.obj))
   console.log(customer)
   const flag = await checkUsername(customer.username)
-  if (flag!=null) {
+  if (flag==null) {
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) throw err;
       bcrypt.hash(customer.password, salt, (err, hash) => {

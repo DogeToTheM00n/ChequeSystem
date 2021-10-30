@@ -22,8 +22,6 @@ class SignIn extends Component {
         username: this.state.username,
         password: this.state.password,
       };
-      console.log(JSON.stringify(data));
-      console.log(this.props.server_public_key)
       encryptWithServerPublicKey(data, this.props.server_public_key).then(
         (encryptedData) => {
           const req = async () => {
@@ -32,7 +30,6 @@ class SignIn extends Component {
               public_key: this.props.clientPublicKey,
             });
             if (res.data) {
-              console.log(res.data)
               // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
               //   console.log(JSON.parse(decryptedData));
               // });
@@ -46,7 +43,6 @@ class SignIn extends Component {
               this.props.history.push('/')
             }
           };
-          console.log(encryptedData)
           req();
         }
       );
