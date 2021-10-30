@@ -39,26 +39,31 @@ async function signUp(req, res) {
   console.log(req.body.obj)
   const customer = JSON.parse(await decrypt.decrypt(req.body.obj))
   console.log(customer)
-  bcrypt.genSalt(saltRounds, (err, salt) => {
-    if (err) throw err;
-    bcrypt.hash(customer.password, salt, (err, hash) => {
+  const flag = await checkUsername(customer.username)
+  if (!flag) {
+    bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) throw err;
-      console.log(hash)
-      const cust = new db_model.customerModel({
-        password: hash,
-        username: customer.username,
-        name: customer.name,
-        mobileNumber: customer.mobileNumber,
-        accountNumber: customer.accountNumber,
-        ifscCode: customer.ifscCode,
-        chequeIdArray: []
+      bcrypt.hash(customer.password, salt, (err, hash) => {
+        if (err) throw err;
+        console.log(hash)
+        const cust = new db_model.customerModel({
+          password: hash,
+          username: customer.username,
+          name: customer.name,
+          mobileNumber: customer.mobileNumber,
+          accountNumber: customer.accountNumber,
+          ifscCode: customer.ifscCode,
+          chequeIdArray: []
+        })
+        cust.save((err) => {
+          if (err) throw err
+        })
+        res.json(true)
       })
-      cust.save((err) => {
-        if (err) throw err
-      })
-      res.json(true)
     })
-  })
+  } else {
+    res.json(false)
+  }
 
 }
 
@@ -68,25 +73,25 @@ function checkUsername(t1) {
       if (err) throw err;
       if (results != null) {
         // console.log("Hello checkusername:",results);
-        resolve(results);
+        resolve(true);
       }
-      resolve(results);
+      resolve(false);
     });
   });
 }
 
 
 async function logIn(req, res) {
-  const credentials  =JSON.parse(await decrypt.decrypt(req.body.obj));
+  const credentials = JSON.parse(await decrypt.decrypt(req.body.obj));
   console.log(credentials);
   const flag = await checkUsername(credentials.username)
   console.log(flag);
   if (flag != null) {
-    bcrypt.compare(credentials.password, flag.password,async (err, result) => {
+    bcrypt.compare(credentials.password, flag.password, async (err, result) => {
       if (err) throw err;
       console.log(result)
       if (result) {
-        const encrypted_aes_key =await  encrypt.encryptWithClientPublicKey(process.env.AES_KEY, req.body.public_key)
+        const encrypted_aes_key = await encrypt.encryptWithClientPublicKey(process.env.AES_KEY, req.body.public_key)
         console.log(encrypted_aes_key)
         user = {
           username: flag.username,

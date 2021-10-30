@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch) => {
     setServerPublicKey: (key) =>
       dispatch({ type: "SET_SERVER_PUBLIC_KEY", key: key }),
     setClientPublicKey: (key) =>
-      dispatch({ type: "SET_CLIENT_PUBLIC_KEY", clientPublicKey: key }),
+      dispatch({ type: "SET_CLIENT_PUBLIC_KEY", key: key }),
   };
 };
 
