@@ -16,10 +16,38 @@ function checkAcNum(accountNumber) {
   });
 }
 
+function verifyAccount(accountNumber) {
+  return new Promise((resolve) => {
+    db_model.customerModel.findOne({ accountNumber: accountNumber }, (err, res) => {
+      if (err) throw err;
+      if (res != null) {
+        resolve(true);
+      }
+      resolve(false);
+    });
+  });
+}
+
 async function checkAccountNumber(req, res) {
   const accountNumber = req.query.accountNumber;
   const resp = await checkAcNum(accountNumber);
-  res.json(resp);
+  if (!resp) res.json(resp)
+  res2 = await verifyAccount(accountNumber)
+  res.json(res2)
+
+}
+
+function checkUsername(t1) {
+  return new Promise((resolve) => {
+    db_model.customerModel.findOne({ username: t1 }, (err, results) => {
+      if (err) throw err;
+      if (results != null) {
+        // console.log("Hello checkusername:",results);
+        resolve(results);
+      }
+      resolve(results);
+    });
+  });
 }
 
 async function signUp(req, res) {
@@ -39,54 +67,47 @@ async function signUp(req, res) {
   console.log(req.body.obj)
   const customer = JSON.parse(await decrypt.decrypt(req.body.obj))
   console.log(customer)
-  bcrypt.genSalt(saltRounds, (err, salt) => {
-    if (err) throw err;
-    bcrypt.hash(customer.password, salt, (err, hash) => {
+  const flag = await checkUsername(credentials.username)
+  if (flag == null) {
+    bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) throw err;
-      console.log(hash)
-      const cust = new db_model.customerModel({
-        password: hash,
-        username: customer.username,
-        name: customer.name,
-        mobileNumber: customer.mobileNumber,
-        accountNumber: customer.accountNumber,
-        ifscCode: customer.ifscCode,
-        chequeIdArray: []
+      bcrypt.hash(customer.password, salt, (err, hash) => {
+        if (err) throw err;
+        console.log(hash)
+        const cust = new db_model.customerModel({
+          password: hash,
+          username: customer.username,
+          name: customer.name,
+          mobileNumber: customer.mobileNumber,
+          accountNumber: customer.accountNumber,
+          ifscCode: customer.ifscCode,
+          chequeIdArray: []
+        })
+        cust.save((err) => {
+          if (err) throw err
+        })
+        res.json(true)
       })
-      cust.save((err) => {
-        if (err) throw err
-      })
-      res.json(true)
     })
-  })
-
+  } else {
+    res.json(false)
+  }
 }
 
-function checkUsername(t1) {
-  return new Promise((resolve) => {
-    db_model.customerModel.findOne({ username: t1 }, (err, results) => {
-      if (err) throw err;
-      if (results != null) {
-        // console.log("Hello checkusername:",results);
-        resolve(results);
-      }
-      resolve(results);
-    });
-  });
-}
+
 
 
 async function logIn(req, res) {
-  const credentials  =JSON.parse(await decrypt.decrypt(req.body.obj));
+  const credentials = JSON.parse(await decrypt.decrypt(req.body.obj));
   console.log(credentials);
   const flag = await checkUsername(credentials.username)
   console.log(flag);
   if (flag != null) {
-    bcrypt.compare(credentials.password, flag.password,async (err, result) => {
+    bcrypt.compare(credentials.password, flag.password, async (err, result) => {
       if (err) throw err;
       console.log(result)
       if (result) {
-        const encrypted_aes_key =await  encrypt.encryptWithClientPublicKey(process.env.AES_KEY, req.body.public_key)
+        const encrypted_aes_key = await encrypt.encryptWithClientPublicKey(process.env.AES_KEY, req.body.public_key)
         console.log(encrypted_aes_key)
         user = {
           username: flag.username,

@@ -1,5 +1,6 @@
 const db_model = require('../../db/db_model.js')
-
+const aesEncandDec= require("../utilities/encrypt&dDecryptAes.js")
+const decrypt=require("../utilities/decrypt.js")
 
 
 function CountDocuments(username) {
@@ -60,36 +61,28 @@ function checkMICRCode(username, code) {
 }
 
 
+
 async function depostCheque(req, res) {
 
-
-    var decryptedPhotos=[]
-    const flag = await checkMICRCode(username, decryptedObject.chequeCode)
-    if (flag) {
-        const chequeId = decryptedObject.username + await CountDocuments(username)
-        for (var i = 0; i < decryptedObject.chequePhotographs.length; i++) {
-            var bufferValue = Buffer.from(decryptedData,"base64")
-            //console.log("buffer: ",bufferValue)
-            decryptedPhotos.push(bufferValue)
-        }
-        const cheque = new db_model.chequeModel({
-            username: decryptedObject.username,
-            chequeCode: decryptedObject.chequeCode,
-            chequePhotographs: decryptedPhotos,
-            _id: chequeId,
-
-        })
-        cheuque.save((err) => {
-            if (err) throw err
-            console.log("Cheque created successfully")
-        })
-        await AddChequeToCustomer(decryptedObject.username, chequeId)
-        await removeMICRCode(decryptedObject.username,decryptedObject.chequeCode)
-        res.json(true)
-    } else {
-        res.json(false)
-    }
-
+let arrayBuffer=req.body.images
+// for(var i=0;i<req.body.images.length;i++){
+//     arrayBuffer.push(aesEncandDec.decryptMessage(req.body.images[i]))
+// }
+   
+    const obj=   JSON.parse( await dcrypt.decrypt(req.body.obj)) 
+    console.log(obj)
+    const id=obj.username+"@"+await CountDocuments(obj.username)
+    const cheque=new db_model.chequeModel({
+        username:obj.username,
+        chequeCode:obj.cheque_code,
+        chequePhotographs: arrayBuffer,
+        _id:id
+    })
+    cheque.save((err)=>{
+        if(err) throw err;
+        console.log("Cheque saved to database successfully")
+    })
+    res.json(true)
 }
 
 
