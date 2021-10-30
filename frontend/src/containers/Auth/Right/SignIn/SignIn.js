@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import axios from "../../../../chequeAxios";
 import Form from "react-bootstrap/Form";
 import decrypt from "../../../../utilities/decrypt";
+import { withRouter } from "react-router";
 
 class SignIn extends Component {
   state = {
@@ -32,9 +33,17 @@ class SignIn extends Component {
             });
             if (res.data) {
               console.log(res.data)
-              decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
-                console.log(JSON.parse(decryptedData));
-              });
+              // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
+              //   console.log(JSON.parse(decryptedData));
+              // });
+              const user = {
+                mobileNumber: res.data.mobileNumber,
+                name: res.data.name,
+                username: res.data.username,
+              }
+              this.props.setAuthTrue(user)
+              this.props.setAesKey(res.data.encrypted_aes_key)
+              this.props.history.push('/')
             }
           };
           console.log(encryptedData)
@@ -98,4 +107,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(SignIn);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAuthTrue: (user) => dispatch({ type: 'True_Auth', user: user }),
+    setAesKey: (key) => dispatch({ type: 'SET_AES_KEY', key: key })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SignIn));

@@ -3,6 +3,7 @@ const initialState = {
   user: null,
   key: null,
   clientPublicKey: null,
+  encryptedAesKey: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -12,6 +13,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         auth: false,
         user: null,
+        key: null,
+        clientPublicKey: null,
+        encryptedAesKey: null,
       };
     case "True_Auth":
       return {
@@ -29,6 +33,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         clientPublicKey: action.key,
       };
+    case "SET_AES_KEY":
+      return {
+        ...state,
+        encryptedAesKey: action.key,
+      }
     default:
       return state;
   }
