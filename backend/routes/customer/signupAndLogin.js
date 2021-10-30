@@ -16,10 +16,38 @@ function checkAcNum(accountNumber) {
   });
 }
 
+function verifyAccount(accountNumber) {
+  return new Promise((resolve) => {
+    db_model.customerModel.findOne({ accountNumber: accountNumber }, (err, res) => {
+      if (err) throw err;
+      if (res != null) {
+        resolve(true);
+      }
+      resolve(false);
+    });
+  });
+}
+
 async function checkAccountNumber(req, res) {
   const accountNumber = req.query.accountNumber;
   const resp = await checkAcNum(accountNumber);
-  res.json(resp);
+  if (!resp) res.json(resp)
+  res2 = await verifyAccount(accountNumber)
+  res.json(res2)
+
+}
+
+function checkUsername(t1) {
+  return new Promise((resolve) => {
+    db_model.customerModel.findOne({ username: t1 }, (err, results) => {
+      if (err) throw err;
+      if (results != null) {
+        // console.log("Hello checkusername:",results);
+        resolve(results);
+      }
+      resolve(results);
+    });
+  });
 }
 
 async function signUp(req, res) {
@@ -39,8 +67,8 @@ async function signUp(req, res) {
   console.log(req.body.obj)
   const customer = JSON.parse(await decrypt.decrypt(req.body.obj))
   console.log(customer)
-  const flag = await checkUsername(customer.username)
-  if (flag==null) {
+  const flag = await checkUsername(credentials.username)
+  if (flag == null) {
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) throw err;
       bcrypt.hash(customer.password, salt, (err, hash) => {
@@ -64,21 +92,9 @@ async function signUp(req, res) {
   } else {
     res.json(false)
   }
-
 }
 
-function checkUsername(t1) {
-  return new Promise((resolve) => {
-    db_model.customerModel.findOne({ username: t1 }, (err, results) => {
-      if (err) throw err;
-      if (results != null) {
-        // console.log("Hello checkusername:",results);
-        resolve(results);
-      }
-      resolve(results);
-    });
-  });
-}
+
 
 
 async function logIn(req, res) {

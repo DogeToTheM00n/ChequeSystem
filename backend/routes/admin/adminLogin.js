@@ -40,10 +40,11 @@ async function adminLogin(req, res) {
     console.log(credentials);
     const admin = await checkUsername(credentials.username);
     if (admin!=null) {
+        const encrypted_aes_key =await  encrypt.encryptWithClientPublicKey(process.env.AES_KEY, req.body.public_key)
         bcrypt.compare(credential.password, admin.password, (err, result) => {
             if (err) throw err;
             if (result) {
-                res.json({ username: admin.username });
+                res.json({ username: admin.username,encrypted_aes_key: encrypted_aes_key });
             } else {
                 res.send(401);
             }

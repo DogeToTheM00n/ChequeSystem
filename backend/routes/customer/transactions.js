@@ -1,6 +1,5 @@
 const db_model = require('../../db/db_model.js')
 
-
 function getChequeIdArray(username) {
     return new Promise(resolve => {
         db_model.findOne({ username: username }, (err, customer) => {
@@ -58,6 +57,8 @@ async function transactionDetail(req, res) {
     }
     res.json(encryptedCheques)
 }
+
+
 
 module.exports = {
     transactions,

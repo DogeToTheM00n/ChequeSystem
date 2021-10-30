@@ -15,7 +15,7 @@ const signupAndLogin = require('./routes/customer/signupAndLogin.js')
 const transactions = require('./routes/customer/transactions.js')
 const cheque = require('./routes/customer/depositCheque.js')
 const decrypt = require('./utilities/decrypt')
-const aesEncy = require('./utilities/encryptAes')
+const aesEncy = require('./utilities/encrypt&DecryptAes.js')
 
 
 
