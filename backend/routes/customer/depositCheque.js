@@ -1,6 +1,6 @@
 const db_model = require('../../db/db_model.js')
-const aesEncandDec= require("../utilities/encrypt&dDecryptAes.js")
-const decrypt=require("../utilities/decrypt.js")
+const aesEncandDec= require("../../utilities/encrypt&DecryptAes.js")
+const decrypt=require("../../utilities/decrypt.js")
 
 
 function CountDocuments(username) {
