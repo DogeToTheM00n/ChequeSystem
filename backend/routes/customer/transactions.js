@@ -46,19 +46,7 @@ function getCheque(_id) {
 
 async function transactionDetail(req, res) {
     const chequePhotographs = await getCheque(req.query._id);
-    res.json({chequePhotographs:chequePhotographs});
-    // var base64Strings = []
-    // var encryptedCheques=[]
-    // for (var i = 0; i < chequePhotographs.length; i++) {
-    //     base64Strings.push(chequePhotographs[i].toString('base64'))
-    // }
-    // for (var i = 0; i < base64Strings.length; i++) {
-    //     let encryptedData = cipher.update(base64Strings[i], "utf-8", "hex");
-
-    //     encryptedData += cipher.final("hex");
-    //     encryptedCheques.push(encryptedData)
-    // }
-    // res.json(encryptedCheques)
+    res.json({chequePhotographs: chequePhotographs});
 }
 
 

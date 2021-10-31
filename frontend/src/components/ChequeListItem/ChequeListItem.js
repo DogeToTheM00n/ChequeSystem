@@ -8,7 +8,7 @@ const ChequeListItem = (props) => {
 
   return (
     <>
-      <ImageModal showImageModal={showImageModal} handleClose={handleClose} />
+      <ImageModal showImageModal={showImageModal} handleClose={handleClose} _id={props.id} />
 
       <div className={classes.Parent} onClick={handleShow}>
         <div className={classes.Id}>{props.id}</div>

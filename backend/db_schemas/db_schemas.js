@@ -83,7 +83,7 @@ const chequeSchema = new Schema({
         required: false
     },
     chequePhotographs: {
-        type: [Buffer],
+        type: [String],
         required: true
     },
     _id: {                   // id format==username@count

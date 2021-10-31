@@ -6,14 +6,15 @@ const decryptImageWithAesKey = async (encryptedBufferImg, key) => {
     146, 184, 121, 127, 136, 74, 198, 227, 43, 182, 160, 127, 33, 155, 147, 31,
   ]);
   const aesDecryptedKey = JSON.parse(await decrypt(key));
-  const cryptoKey = await crypto.subtle.importKey(
+  const cryptoKey = await window.crypto.subtle.importKey(
     "jwk",
     JSON.parse(aesDecryptedKey),
     { name: "AES-GCM" },
     true,
     ["encrypt", "decrypt"]
   );
-  const result = await crypto.subtle.decrypt(
+  console.log(cryptoKey)
+  const result = await window.crypto.subtle.decrypt(
     {
       name: "AES-GCM",
       iv: iv,

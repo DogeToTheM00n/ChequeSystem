@@ -59,6 +59,7 @@ const UploadChequeModal = (props) => {
         backImageBuffer,
         aesKey
       );
+      console.log(encryptedBufferImg1)
       // const decryptedImg1 = await decryptImageWithAesKey(
       //   encryptedBufferImg1,
       //   aesKey
