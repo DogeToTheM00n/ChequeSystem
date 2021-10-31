@@ -4,6 +4,9 @@ import { Modal, Form, Button } from "react-bootstrap";
 import encryptImageWithAesKey from "../../utilities/encryptFile";
 import { useSelector } from "react-redux";
 import decryptImageWithAesKey from "../../utilities/decryptFile";
+import axios from "../../chequeAxios";
+import encrypt from "../../utilities/encrypt";
+import ab2str from "../../utilities/arrayBufferToString";
 
 const UploadChequeModal = (props) => {
   const [validated, setValidated] = useState(false);
@@ -11,6 +14,8 @@ const UploadChequeModal = (props) => {
   const [frontImage, setFrontImage] = useState();
   const [backImage, setBackImage] = useState();
   const aesKey = useSelector((state) => state.encryptedAesKey);
+  const user = useSelector((state) => state.user);
+  const serverPublicKey = useSelector((state) => state.key);
   const onFrontImageChange = (event) => {
     setFrontImage(event.target.files[0]);
   };
@@ -52,17 +57,25 @@ const UploadChequeModal = (props) => {
         backImageBuffer,
         aesKey
       );
-      const decryptedImg1 = await decryptImageWithAesKey(
-        encryptedBufferImg1,
-        aesKey
-      );
-      const decryptedImg2 = await decryptImageWithAesKey(
-        encryptedBufferImg2,
-        aesKey
-      );
-      document.querySelector(
-        "body"
-      ).innerHTML = `<img src="data:image/png;base64,${decryptedImg2}"/>`;
+      // const decryptedImg1 = await decryptImageWithAesKey(
+      //   encryptedBufferImg1,
+      //   aesKey
+      // );
+      // const decryptedImg2 = await decryptImageWithAesKey(
+      //   encryptedBufferImg2,
+      //   aesKey
+      // );
+      // document.querySelector(
+      //   "body"
+      // ).innerHTML = `<img src="data:image/png;base64,${decryptedImg2}"/>`;
+      const userData = await encrypt({ username: user.username, cheque_code: chequeNumber }, serverPublicKey);
+      const data = {
+        images: [ab2str(encryptedBufferImg1), ab2str(encryptedBufferImg2)],
+        obj: userData,
+      };
+      console.log(data.images);
+      const result = await axios.post("/api/depositCheque", data);
+      console.log(result);
     }
     setValidated(true);
   };

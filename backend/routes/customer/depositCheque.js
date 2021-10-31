@@ -7,7 +7,7 @@ function CountDocuments(username) {
     return new Promise(resolve => {
         db_model.customerModel.findOne({ username: username }, (err, customer) => {
             if (err) throw err;
-            resolve(customer.ChequeIdArray.length);
+            resolve(customer.chequeIdArray.length);
         });
     })
 }
@@ -68,8 +68,8 @@ let arrayBuffer=req.body.images
 // for(var i=0;i<req.body.images.length;i++){
 //     arrayBuffer.push(aesEncandDec.decryptMessage(req.body.images[i]))
 // }
-   
-    const obj=   JSON.parse( await dcrypt.decrypt(req.body.obj)) 
+    console.log(arrayBuffer)
+    const obj=   JSON.parse( await decrypt.decrypt(req.body.obj)) 
     console.log(obj)
     const id=obj.username+"@"+await CountDocuments(obj.username)
     const cheque=new db_model.chequeModel({
