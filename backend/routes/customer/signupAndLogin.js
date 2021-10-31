@@ -31,7 +31,10 @@ function verifyAccount(accountNumber) {
 async function checkAccountNumber(req, res) {
   const accountNumber = req.query.accountNumber;
   const resp = await checkAcNum(accountNumber);
-  if (!resp) res.json(resp)
+  if (!resp) {
+    res.json(resp)
+    return
+  }
   res2 = await verifyAccount(accountNumber)
   res.json(res2)
 
@@ -129,9 +132,9 @@ async function logIn(req, res) {
 }
 
 async function checkUsernameExists(req, res) {
-    const flag =await checkUsername(req.query.username);
-    if(flag!=null) res.json(false);
-    else res.json(true);
+  const flag = await checkUsername(req.query.username);
+  if (flag != null) res.json(false);
+  else res.json(true);
 }
 
 module.exports = {
