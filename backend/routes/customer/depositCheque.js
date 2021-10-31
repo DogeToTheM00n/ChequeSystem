@@ -19,8 +19,7 @@ function AddChequeToCustomer(username, chequeId) {
             { $push: { ChequeIdArray: chequeId } },
             function (error, success) {
                 if (error) {
-                    console.log(error);
-                    resolve(error);
+                    throw err
                 } else {
                     //console.log(success);
                     resolve(success);
@@ -82,6 +81,7 @@ let arrayBuffer=req.body.images
         if(err) throw err;
         console.log("Cheque saved to database successfully")
     })
+    await AddChequeToCustomer(obj.username,id)
     res.json(true)
 }
 
