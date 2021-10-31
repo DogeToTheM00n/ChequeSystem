@@ -34,8 +34,13 @@ function verifyAccount(accountNumber) {
 async function checkAccountNumber(req, res) {
   const accountNumber = req.query.accountNumber;
   const resp = await checkAcNum(accountNumber);
-  const res2 = await verifyAccount(accountNumber);
-  res.json(resp&&!res2);
+  if (!resp) {
+    res.json(resp)
+    return
+  }
+  const res2 = await verifyAccount(accountNumber)
+  res.json(!res2)
+
 }
 
 function checkUsername(t1) {
