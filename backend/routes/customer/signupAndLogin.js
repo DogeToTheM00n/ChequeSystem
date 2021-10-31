@@ -35,8 +35,8 @@ async function checkAccountNumber(req, res) {
     res.json(resp)
     return
   }
-  res2 = await verifyAccount(accountNumber)
-  res.json(res2)
+  const res2 = await verifyAccount(accountNumber)
+  res.json(!res2)
 
 }
 
