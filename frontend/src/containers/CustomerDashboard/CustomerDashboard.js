@@ -6,10 +6,10 @@ const CustomerDashboard = () => {
     const [showDepositModal, setShowDepositModal] = useState(false);
     const handleClose = () => setShowDepositModal(false);
     const handleShow = () => setShowDepositModal(true);
- 
+    const [reload, setReload] = useState(false)
     return (
         <div>
-            <UploadChequeModal showDepositModal={showDepositModal} handleClose={handleClose} />
+            <UploadChequeModal showDepositModal={showDepositModal} handleClose={handleClose} setReload={setReload} reload={reload}/>
             <div className={classes.Parent}>
                 <ChequeList/>
                 <div className={classes.Options}>
