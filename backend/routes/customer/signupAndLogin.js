@@ -18,23 +18,24 @@ function checkAcNum(accountNumber) {
 
 function verifyAccount(accountNumber) {
   return new Promise((resolve) => {
-    db_model.customerModel.findOne({ accountNumber: accountNumber }, (err, res) => {
-      if (err) throw err;
-      if (res != null) {
-        resolve(true);
+    db_model.customerModel.findOne(
+      { accountNumber: accountNumber },
+      (err, res) => {
+        if (err) throw err;
+        if (res != null) {
+          resolve(true);
+        }
+        resolve(false);
       }
-      resolve(false);
-    });
+    );
   });
 }
 
 async function checkAccountNumber(req, res) {
   const accountNumber = req.query.accountNumber;
   const resp = await checkAcNum(accountNumber);
-  if (!resp) res.json(resp)
-  res2 = await verifyAccount(accountNumber)
-  res.json(res2)
-
+  const res2 = await verifyAccount(accountNumber);
+  res.json(resp&&!res2);
 }
 
 function checkUsername(t1) {
@@ -51,7 +52,6 @@ function checkUsername(t1) {
 }
 
 async function signUp(req, res) {
-
   // console.log("heyy");
   // const a = {
   //   username: "abc",
@@ -64,16 +64,16 @@ async function signUp(req, res) {
   // const enc = await encrypt.encryptWithClientPublicKey(a,process.env.PUBLIC_KEY)
   // console.log("encrypted from signup: ",enc)
 
-  console.log(req.body.obj)
-  const customer = JSON.parse(await decrypt.decrypt(req.body.obj))
-  console.log(customer)
-  const flag = await checkUsername(customer.username)
+  console.log(req.body.obj);
+  const customer = JSON.parse(await decrypt.decrypt(req.body.obj));
+  console.log(customer);
+  const flag = await checkUsername(customer.username);
   if (flag == null) {
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) throw err;
       bcrypt.hash(customer.password, salt, (err, hash) => {
         if (err) throw err;
-        console.log(hash)
+        console.log(hash);
         const cust = new db_model.customerModel({
           password: hash,
           username: customer.username,
@@ -81,62 +81,62 @@ async function signUp(req, res) {
           mobileNumber: customer.mobileNumber,
           accountNumber: customer.accountNumber,
           ifscCode: customer.ifscCode,
-          chequeIdArray: []
-        })
+          chequeIdArray: [],
+        });
         cust.save((err) => {
-          if (err) throw err
-        })
-        res.json(true)
-      })
-    })
+          if (err) throw err;
+        });
+        res.json(true);
+      });
+    });
   } else {
-    res.json(false)
+    res.json(false);
   }
 }
-
-
-
 
 async function logIn(req, res) {
   const credentials = JSON.parse(await decrypt.decrypt(req.body.obj));
   console.log(credentials);
-  const flag = await checkUsername(credentials.username)
+  const flag = await checkUsername(credentials.username);
   console.log(flag);
   if (flag != null) {
     bcrypt.compare(credentials.password, flag.password, async (err, result) => {
       if (err) throw err;
-      console.log(result)
+      console.log(result);
       if (result) {
-        const encrypted_aes_key = await encrypt.encryptWithClientPublicKey(process.env.AES_KEY, req.body.public_key)
-        console.log(encrypted_aes_key)
+        const encrypted_aes_key = await encrypt.encryptWithClientPublicKey(
+          process.env.AES_KEY,
+          req.body.public_key
+        );
+        console.log(encrypted_aes_key);
         user = {
           username: flag.username,
           mobileNumber: flag.mobileNumber,
           name: flag.name,
-          encrypted_aes_key: encrypted_aes_key
-        }
-        console.log(user)
-        res.json(user)
+          encrypted_aes_key: encrypted_aes_key,
+        };
+        console.log(user);
+        res.json(user);
       } else {
-        console.log("In password")
-        res.send(401)
+        console.log("In password");
+        res.send(401);
       }
-    })
+    });
   } else {
-    console.log("null")
-    res.send(401)
+    console.log("null");
+    res.send(401);
   }
 }
 
 async function checkUsernameExists(req, res) {
-    const flag =await checkUsername(req.query.username);
-    if(flag!=null) res.json(false);
-    else res.json(true);
+  const flag = await checkUsername(req.query.username);
+  if (flag != null) res.json(false);
+  else res.json(true);
 }
 
 module.exports = {
   signUp,
   checkAccountNumber,
   logIn,
-  checkUsernameExists
+  checkUsernameExists,
 };

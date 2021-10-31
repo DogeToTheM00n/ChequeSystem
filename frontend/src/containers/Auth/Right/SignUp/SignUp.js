@@ -24,6 +24,8 @@ class SignUp extends Component {
     accountErr: false,
     IFSCCodeErr: false,
     secondReqErr: true,
+    accountExistErr: false,
+    usernameExistErr: false,
   };
   checkVal = (inputName) => {
     if (this.state.div === 0) {
@@ -73,7 +75,7 @@ class SignUp extends Component {
       this.checkVal(event.target.name);
     });
   };
-  next = (event) => {
+  next = async (event) => {
     event.preventDefault();
     if (
       !this.state.usernameLenErr &&
@@ -81,10 +83,20 @@ class SignUp extends Component {
       !this.state.cPasswordErr &&
       !this.state.firstReqErr
     ) {
-      this.setState({ div: 1 });
+      const usernameDoesNotExists = await axios.get(
+        "/api/checkUsernameExists",
+        {
+          params: { username: this.state.username },
+        }
+      );
+      if (usernameDoesNotExists.data) {
+        this.setState({ div: 1, usernameExistErr: false });
+      } else {
+        this.setState({ usernameExistErr: true });
+      }
     }
   };
-  submit = (event) => {
+  submit = async (event) => {
     event.preventDefault();
     if (
       !this.state.nameErr &&
@@ -93,28 +105,37 @@ class SignUp extends Component {
       !this.state.IFSCCodeErr &&
       !this.state.secondReqErr
     ) {
-      const data = {
-        username: this.state.username,
-        password: this.state.password,
-        name: this.state.name,
-        mobileNumber: this.state.contact,
-        accountNumber: this.state.account,
-        ifscCode: this.state.IFSCCode,
-      };
-      console.log(JSON.stringify(data));
-      console.log(this.props.server_public_key)
-      const encryptedData = encryptWithServerPublicKey(
-        data,
-        this.props.server_public_key
-      ).then((encryptedData) => {
-        const req = async () => {
-          const res = await axios.post('/api/signUp', { obj: encryptedData })
-          if (res.data) {
-            this.props.changeAuthMethod()
-          }
+      const accountExists = await axios.get("/api/checkAccountNumber", {
+        params: {
+          accountNumber: this.state.account,
+        },
+      });
+      console.log(accountExists.data);
+      if (accountExists.data) {
+        const data = {
+          username: this.state.username,
+          password: this.state.password,
+          name: this.state.name,
+          mobileNumber: this.state.contact,
+          accountNumber: this.state.account,
+          ifscCode: this.state.IFSCCode,
         };
-        req()
-      })
+        encryptWithServerPublicKey(data, this.props.server_public_key).then(
+          (encryptedData) => {
+            const req = async () => {
+              const res = await axios.post("/api/signUp", {
+                obj: encryptedData,
+              });
+              if (res.data) {
+                this.props.changeAuthMethod();
+              }
+            };
+            req();
+          }
+        );
+      } else {
+        this.setState({ accountExistErr: true, div: 0 });
+      }
     }
   };
   render() {
@@ -129,6 +150,12 @@ class SignUp extends Component {
             <div>
               {this.state.firstReqErr && (
                 <p className={classes.Error}>*All fields are required</p>
+              )}
+              {this.state.usernameExistErr && (
+                <p className={classes.Error}>*Username already exists</p>
+              )}
+              {this.state.accountExistErr && (
+                <p className={classes.Error}>*Bank Account does not exist</p>
               )}
               <Form.Group className="mb-4" controlId="username">
                 <Form.Label>Username</Form.Label>
