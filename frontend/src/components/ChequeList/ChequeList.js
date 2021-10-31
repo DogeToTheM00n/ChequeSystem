@@ -1,5 +1,5 @@
 import ChequeListItem from "../ChequeListItem/ChequeListItem"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import classes from './ChequeList.module.css'
 
 const ChequeList = () => {

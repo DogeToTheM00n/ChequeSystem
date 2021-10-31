@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import classes from "./UploadChequeModal.module.css";
 import { Modal, Form, Button } from "react-bootstrap";
 import encryptImageWithAesKey from "../../utilities/encryptFile";
@@ -16,6 +16,7 @@ const UploadChequeModal = (props) => {
   const aesKey = useSelector((state) => state.encryptedAesKey);
   const user = useSelector((state) => state.user);
   const serverPublicKey = useSelector((state) => state.key);
+  const formRef = useRef(null);
   const onFrontImageChange = (event) => {
     setFrontImage(event.target.files[0]);
   };
@@ -28,6 +29,7 @@ const UploadChequeModal = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+    setValidated(true);
     if (form.checkValidity() === false) {
       event.stopPropagation();
     } else {
@@ -76,8 +78,13 @@ const UploadChequeModal = (props) => {
       console.log(data.images);
       const result = await axios.post("/api/depositCheque", data);
       console.log(result);
+      if(result.data){
+        setChequeNumber("")
+        setValidated(false)
+        props.handleClose()
+        props.setReload(!props.reload)
+      }
     }
-    setValidated(true);
   };
   return (
     <Modal
@@ -99,7 +106,7 @@ const UploadChequeModal = (props) => {
         ></i>
       </Modal.Header>
       <Modal.Body>
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form ref={formRef} noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>Cheque Number</Form.Label>
             <Form.Control
