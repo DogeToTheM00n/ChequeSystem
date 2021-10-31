@@ -67,7 +67,7 @@ async function signUp(req, res) {
   console.log(req.body.obj)
   const customer = JSON.parse(await decrypt.decrypt(req.body.obj))
   console.log(customer)
-  const flag = await checkUsername(credentials.username)
+  const flag = await checkUsername(customer.username)
   if (flag == null) {
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) throw err;
@@ -128,8 +128,15 @@ async function logIn(req, res) {
   }
 }
 
+async function checkUsernameExists(req, res) {
+    const flag =await checkUsername(req.query.username);
+    if(flag!=null) res.json(false);
+    else res.json(true);
+}
+
 module.exports = {
   signUp,
   checkAccountNumber,
   logIn,
+  checkUsernameExists
 };

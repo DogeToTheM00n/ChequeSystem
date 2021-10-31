@@ -55,22 +55,8 @@ async function adminLogin(req, res) {
 }
 
 
-function getPendingCheque() {
-    return new Promise(resolve => {
-        db_model.chequeModel.find({ chequeStatus: 2 }, (err, cheques) => {
-            if (err) throw err;
-            // console.log(cheques._id);
-            resolve(cheques._id);
-        })
-    })
-}
 
-async function adminDashboard(req, res) {
-    const chequesId = await getPendingCheque();
-    res.json(chequesId);
-}
 
 module.exports = {
     adminLogin,
-    adminDashboard
 }

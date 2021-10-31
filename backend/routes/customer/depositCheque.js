@@ -16,7 +16,7 @@ function AddChequeToCustomer(username, chequeId) {
     return new Promise(resolve => {
         db_model.customerModel.findOneAndUpdate(
             { username: username },
-            { $push: { ChequeIdArray: chequeId } },
+            { $push: { chequeIdArray: chequeId } },
             function (error, success) {
                 if (error) {
                     throw err
