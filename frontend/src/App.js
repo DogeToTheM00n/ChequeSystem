@@ -23,10 +23,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.props.location.pathname !== "/auth" && <Menu />}
+        {(this.props.location.pathname !== "/auth" && this.props.location.pathname !== "/admin") && <Menu />}
         <Switch>
           <Route path="/chequeVerify" component={ChequeVerify} />
           <Route path="/auth" component={Auth} />
+          <Route path="/admin" component={Auth} />
           <Route path="/" component={CustomerDashboard} />
           <Route path="*" component={Auth} />
         </Switch>

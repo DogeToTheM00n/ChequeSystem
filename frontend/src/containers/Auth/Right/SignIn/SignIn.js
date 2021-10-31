@@ -24,34 +24,60 @@ class SignIn extends Component {
       };
       encryptWithServerPublicKey(data, this.props.server_public_key).then(
         (encryptedData) => {
-          const req = async () => {
-            const res = await axios.post("/api/login", {
-              obj: encryptedData,
-              public_key: this.props.clientPublicKey,
-            });
-            if (res.data) {
-              // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
-              //   console.log(JSON.parse(decryptedData));
-              // });
-              const user = {
-                mobileNumber: res.data.mobileNumber,
-                name: res.data.name,
-                username: res.data.username,
+          if (this.props.location.pathname === '/auth') {
+            const req = async () => {
+              const res = await axios.post("/api/login", {
+                obj: encryptedData,
+                public_key: this.props.clientPublicKey,
+              });
+              if (res.data) {
+                // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
+                //   console.log(JSON.parse(decryptedData));
+                // });
+                const user = {
+                  mobileNumber: res.data.mobileNumber,
+                  name: res.data.name,
+                  username: res.data.username,
+                }
+                this.props.setAuthTrue(user)
+                this.props.setAesKey(res.data.encrypted_aes_key)
+                this.props.history.push('/')
               }
-              this.props.setAuthTrue(user)
-              this.props.setAesKey(res.data.encrypted_aes_key)
-              this.props.history.push('/')
-            }
-          };
-          req();
+            };
+            req();
+          }
+          else {
+            const req = async () => {
+              const res = await axios.post("/api/adminLogin", {
+                obj: encryptedData,
+                public_key: this.props.clientPublicKey,
+              });
+              console.log(res.data)
+              if (res.data) {
+                // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
+                //   console.log(JSON.parse(decryptedData));
+                // });
+                const user = {
+                  name: res.data.name,
+                  username: res.data.username,
+                }
+                this.props.setAuthTrue(user)
+                this.props.setAesKey(res.data.encrypted_aes_key)
+                // this.props.history.push('/')
+              }
+            };
+            req()
+          }
         }
       );
     }
   };
   render() {
+    console.log(this.props.location.pathname)
     return (
       <>
-        <h1>Sign In to Apna Cheques</h1>
+        {this.props.location.pathname === '/auth' ? <h1>Sign In to Apna Cheques</h1> : null}
+        {this.props.location.pathname === '/admin' ? <h1>Log In as Admin</h1> : null}
         <Form className={classes.SignIn}>
           <p style={{ color: "#dc3546" }}>*All fields are required</p>
           <Form.Group className="mb-4" controlId="username">
@@ -80,9 +106,10 @@ class SignIn extends Component {
               minLength="7"
             />
           </Form.Group>
-          <p className={classes.P} onClick={this.props.changeAuthMethod}>
-            New User?
-          </p>
+          {this.props.location.pathname === '/auth' ?
+            <p className={classes.P} onClick={this.props.changeAuthMethod}>
+              New User?
+            </p> : null}
           <button
             className={classes.Button}
             type="submit"
