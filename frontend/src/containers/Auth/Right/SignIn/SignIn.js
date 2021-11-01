@@ -6,6 +6,7 @@ import axios from "../../../../chequeAxios";
 import Form from "react-bootstrap/Form";
 import decrypt from "../../../../utilities/decrypt";
 import { withRouter } from "react-router";
+import ReCAPTCHA from "react-google-recaptcha";
 
 class SignIn extends Component {
   state = {
@@ -109,6 +110,11 @@ class SignIn extends Component {
               minLength="7"
             />
           </Form.Group>
+          <ReCAPTCHA
+                sitekey="6Ld-tgodAAAAAIKYDYuoZHEIhpgiLJdJQToCPNw3"
+                onChange={this.onChangeCaptcha}
+                size="normal"
+          />
           {this.props.location.pathname === "/auth" ? (
             <p className={classes.P} onClick={this.props.changeAuthMethod}>
               New User?

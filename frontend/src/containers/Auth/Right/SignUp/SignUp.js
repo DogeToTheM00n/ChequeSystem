@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import encryptWithServerPublicKey from "../../../../utilities/encrypt";
 import { connect } from "react-redux";
 import axios from "../../../../chequeAxios";
+import ReCAPTCHA from "react-google-recaptcha"
 
 class SignUp extends Component {
   state = {
@@ -26,6 +27,7 @@ class SignUp extends Component {
     secondReqErr: true,
     accountExistErr: false,
     usernameExistErr: false,
+    captchaToken: ""
   };
   checkVal = (inputName) => {
     if (this.state.div === 0) {
@@ -98,46 +100,55 @@ class SignUp extends Component {
   };
   submit = async (event) => {
     event.preventDefault();
-    if (
-      !this.state.nameErr &&
-      !this.state.accountErr &&
-      !this.state.contactErr &&
-      !this.state.IFSCCodeErr &&
-      !this.state.secondReqErr
-    ) {
-      const accountExists = await axios.get("/api/checkAccountNumber", {
-        params: {
-          accountNumber: this.state.account,
-        },
-      });
-      console.log(accountExists.data);
-      if (accountExists.data) {
-        const data = {
-          username: this.state.username,
-          password: this.state.password,
-          name: this.state.name,
-          mobileNumber: this.state.contact,
-          accountNumber: this.state.account,
-          ifscCode: this.state.IFSCCode,
-        };
-        encryptWithServerPublicKey(data, this.props.server_public_key).then(
-          (encryptedData) => {
-            const req = async () => {
-              const res = await axios.post("/api/signUp", {
-                obj: encryptedData,
-              });
-              if (res.data) {
-                this.props.changeAuthMethod();
-              }
-            };
-            req();
-          }
-        );
-      } else {
-        this.setState({ accountExistErr: true, div: 0 });
+    const captchaRes = await axios.post("/api/captchaVerification", {
+      token: this.state.captchaToken
+    })
+    console.log(captchaRes.data)
+    if (captchaRes.data.success) {
+      if (
+        !this.state.nameErr &&
+        !this.state.accountErr &&
+        !this.state.contactErr &&
+        !this.state.IFSCCodeErr &&
+        !this.state.secondReqErr
+      ) {
+        const accountExists = await axios.get("/api/checkAccountNumber", {
+          params: {
+            accountNumber: this.state.account,
+          },
+        });
+        console.log(accountExists.data);
+        if (accountExists.data) {
+          const data = {
+            username: this.state.username,
+            password: this.state.password,
+            name: this.state.name,
+            mobileNumber: this.state.contact,
+            accountNumber: this.state.account,
+            ifscCode: this.state.IFSCCode,
+          };
+          encryptWithServerPublicKey(data, this.props.server_public_key).then(
+            (encryptedData) => {
+              const req = async () => {
+                const res = await axios.post("/api/signUp", {
+                  obj: encryptedData,
+                });
+                if (res.data) {
+                  this.props.changeAuthMethod();
+                }
+              };
+              req();
+            }
+          );
+        } else {
+          this.setState({ accountExistErr: true, div: 0 });
+        }
       }
     }
   };
+  onChangeCaptcha = (value) => {
+    this.setState({ captchaToken: value })
+  }
   render() {
     return (
       <>
@@ -273,12 +284,18 @@ class SignUp extends Component {
                   <p className={classes.Error}>*Invalid IFSC Code</p>
                 )}
               </Form.Group>
+              <ReCAPTCHA
+                sitekey="6Ld-tgodAAAAAIKYDYuoZHEIhpgiLJdJQToCPNw3"
+                onChange={this.onChangeCaptcha}
+                size="normal"
+              />
               <p
                 className={classes.P2}
                 onClick={() => this.setState({ div: 0 })}
               >
                 <i className="fas fa-chevron-left"></i> Back
               </p>
+
               <button
                 className={classes.Button}
                 onClick={this.submit}
@@ -288,7 +305,9 @@ class SignUp extends Component {
               </button>
             </div>
           )}
+
         </Form>
+
       </>
     );
   }
