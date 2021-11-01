@@ -1,0 +1,22 @@
+.Parent{
+    margin-top: 5vh;
+    text-align: center;
+}
+.Child{
+    margin: 2vh auto;
+    padding: 2vh;
+    width: 40%;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 1px 4px 8px 1px rgba(0,0,0,0.2);
+}
+.Child:hover{
+    box-shadow: 1px 4px 8px 1px rgba(0,0,0,0.5);
+}
+.Child p{
+    margin: 0;
+}
+.H2{
+    margin:5vh auto;
+}

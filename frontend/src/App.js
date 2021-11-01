@@ -10,6 +10,7 @@ import CustomerDashboard from "./containers/CustomerDashboard/CustomerDashboard"
 import axios from "./chequeAxios";
 import generateClientKeyPair from "./utilities/generateClientKeyPair";
 import React, { Component } from "react";
+import AdminDashboard from "./containers/AdminDashboard/AdminDashboard";
 
 class App extends Component {
   componentDidMount() {
@@ -23,11 +24,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {(this.props.location.pathname !== "/auth" && this.props.location.pathname !== "/admin") && <Menu />}
+        {/* {this.props.location.pathname !== "/auth" &&
+          this.props.location.pathname !== "/admin" && <Menu />} */}
         <Switch>
           <Route path="/chequeVerify" component={ChequeVerify} />
           <Route path="/auth" component={Auth} />
           <Route path="/admin" component={Auth} />
+          <Route path="/adminDashboard" component={AdminDashboard} />
           <Route path="/" component={CustomerDashboard} />
           <Route path="*" component={Auth} />
         </Switch>

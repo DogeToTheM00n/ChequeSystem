@@ -24,7 +24,7 @@ class SignIn extends Component {
       };
       encryptWithServerPublicKey(data, this.props.server_public_key).then(
         (encryptedData) => {
-          if (this.props.location.pathname === '/auth') {
+          if (this.props.location.pathname === "/auth") {
             const req = async () => {
               const res = await axios.post("/api/login", {
                 obj: encryptedData,
@@ -38,21 +38,20 @@ class SignIn extends Component {
                   mobileNumber: res.data.mobileNumber,
                   name: res.data.name,
                   username: res.data.username,
-                }
-                this.props.setAuthTrue(user)
-                this.props.setAesKey(res.data.encrypted_aes_key)
-                this.props.history.push('/')
+                };
+                this.props.setAuthTrue(user);
+                this.props.setAesKey(res.data.encrypted_aes_key);
+                this.props.history.push("/");
               }
             };
             req();
-          }
-          else {
+          } else {
             const req = async () => {
               const res = await axios.post("/api/adminLogin", {
                 obj: encryptedData,
                 public_key: this.props.clientPublicKey,
               });
-              console.log(res.data)
+              console.log(res.data);
               if (res.data) {
                 // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
                 //   console.log(JSON.parse(decryptedData));
@@ -60,24 +59,28 @@ class SignIn extends Component {
                 const user = {
                   name: res.data.name,
                   username: res.data.username,
-                }
-                this.props.setAuthTrue(user)
-                this.props.setAesKey(res.data.encrypted_aes_key)
-                // this.props.history.push('/')
+                };
+                this.props.setAuthTrue(user);
+                this.props.setAesKey(res.data.encrypted_aes_key);
+                this.props.history.push("/adminDashboard");
               }
             };
-            req()
+            req();
           }
         }
       );
     }
   };
   render() {
-    console.log(this.props.location.pathname)
+    console.log(this.props.location.pathname);
     return (
       <>
-        {this.props.location.pathname === '/auth' ? <h1>Sign In to Apna Cheques</h1> : null}
-        {this.props.location.pathname === '/admin' ? <h1>Log In as Admin</h1> : null}
+        {this.props.location.pathname === "/auth" ? (
+          <h1>Sign In to Apna Cheques</h1>
+        ) : null}
+        {this.props.location.pathname === "/admin" ? (
+          <h1>Log In as Admin</h1>
+        ) : null}
         <Form className={classes.SignIn}>
           <p style={{ color: "#dc3546" }}>*All fields are required</p>
           <Form.Group className="mb-4" controlId="username">
@@ -106,10 +109,11 @@ class SignIn extends Component {
               minLength="7"
             />
           </Form.Group>
-          {this.props.location.pathname === '/auth' ?
+          {this.props.location.pathname === "/auth" ? (
             <p className={classes.P} onClick={this.props.changeAuthMethod}>
               New User?
-            </p> : null}
+            </p>
+          ) : null}
           <button
             className={classes.Button}
             type="submit"
@@ -132,9 +136,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setAuthTrue: (user) => dispatch({ type: 'True_Auth', user: user }),
-    setAesKey: (key) => dispatch({ type: 'SET_AES_KEY', key: key })
-  }
-}
+    setAuthTrue: (user) => dispatch({ type: "True_Auth", user: user }),
+    setAesKey: (key) => dispatch({ type: "SET_AES_KEY", key: key }),
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SignIn));

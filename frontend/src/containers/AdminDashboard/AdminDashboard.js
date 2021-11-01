@@ -1,28 +1,28 @@
 import classes from "./AdminDashboard.module.css";
-import { useState } from "react";
-import UploadChequeModal from "../../components/UploadChequeModal/UploadChequeModal";
-import ChequeList from "../../components/ChequeList/ChequeList";
+import { useState, useEffect } from "react";
+import axios from "../../chequeAxios";
+
 const AdminDashboard = () => {
   const [showDepositModal, setShowDepositModal] = useState(false);
   const handleClose = () => setShowDepositModal(false);
   const handleShow = () => setShowDepositModal(true);
   const [reload, setReload] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  useEffect(() => {
+    const func = async () => {
+      const res = await axios.get("/api/adminDashboard");
+      setTransactions(res.data);
+    };
+    func();
+  });
   return (
-    <div>
-      <UploadChequeModal
-        showDepositModal={showDepositModal}
-        handleClose={handleClose}
-        setReload={setReload}
-        reload={reload}
-      />
-      <div className={classes.Parent}>
-        <ChequeList reload={reload} />
-        <div className={classes.Options}>
-          <div className={classes.ButtonDeposit} onClick={handleShow}>
-            <i className="fas fa-upload"></i>&nbsp;Deposit
-          </div>
+    <div className={classes.Parent}>
+      <h2 className={classes.H2}>Pending Requests({transactions.length})</h2>
+      {transactions.map((transaction) => (
+        <div className={classes.Child}>
+          <p>{transaction}</p>
         </div>
-      </div>
+      ))}
     </div>
   );
 };

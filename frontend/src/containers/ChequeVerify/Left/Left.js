@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 const Left = (props) => {
   const [state, setState] = useState({
-    accountVerify: 0,
+    accountVerify: 1,
     amount: "",
     accountNumber: "",
     err: "",
