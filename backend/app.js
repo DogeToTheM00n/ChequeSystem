@@ -10,6 +10,7 @@ const cors = require("cors");
 const db_model = require("./db/db_model.js");
 const saveUserDetail = require("./routes/admin/userDetails.js");
 const adminLogin = require("./routes/admin/adminLogin.js");
+const detailCheque =require("./routes/admin/detailCheque.js")
 const ad_details=require("./routes/admin/getDetails.js")
 const profile = require("./routes/customer/profile.js");
 const signupAndLogin = require("./routes/customer/signupAndLogin.js");
@@ -89,10 +90,17 @@ app.get("/api/checkUsernameExists",(req,res)=>{
     checkUsernameExists.checkUsernameExists(req,res);
 })
 
-// app.post("/abc", upload.any(),(req, res) => {
-//     const f = req.files[0]
-//     aesEncy.all(f.buffer)
-// })
+app.get("./api/detailedCheque",(req,res)=>{
+  detailCheque.detailCheque(req,res);
+})
+app.get("./api/recipientName",(req,res)=>{
+  detailCheque.recipientName(req,res);
+})
+
+app.post("/abc", upload.any(),(req, res) => {
+    const f = req.files[0]
+    aesEncy.all(f.buffer)
+})
 
 app.listen(8080, () => {
   console.log("Pram Server is running on port 8080");
