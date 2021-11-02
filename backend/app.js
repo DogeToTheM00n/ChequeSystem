@@ -12,7 +12,6 @@ const saveUserDetail = require("./routes/admin/userDetails.js");
 const adminLogin = require("./routes/admin/adminLogin.js");
 const ad_details = require("./routes/admin/getDetails.js")
 const detailCheque =require("./routes/admin/detailCheque.js")
-const ad_details=require("./routes/admin/getDetails.js")
 const profile = require("./routes/customer/profile.js");
 const signupAndLogin = require("./routes/customer/signupAndLogin.js");
 const checkUsernameExists = require("./routes/customer/signupAndLogin.js")

@@ -78,7 +78,7 @@ const UploadChequeModal = (props) => {
       };
       console.log(data.images);
       const result = await axios.post("/api/depositCheque", data);
-      console.log(result);
+      console.log(result.data);
       if(result.data){
         setChequeNumber("")
         setValidated(false)
