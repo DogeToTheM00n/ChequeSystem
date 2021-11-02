@@ -10,12 +10,9 @@ const axios = require("axios")
 const db_model = require("./db/db_model.js");
 const saveUserDetail = require("./routes/admin/userDetails.js");
 const adminLogin = require("./routes/admin/adminLogin.js");
-<<<<<<< HEAD
 const ad_details = require("./routes/admin/getDetails.js")
-=======
 const detailCheque =require("./routes/admin/detailCheque.js")
 const ad_details=require("./routes/admin/getDetails.js")
->>>>>>> a71e747cf79be1cf73da3efc779add6cdd11486e
 const profile = require("./routes/customer/profile.js");
 const signupAndLogin = require("./routes/customer/signupAndLogin.js");
 const checkUsernameExists = require("./routes/customer/signupAndLogin.js")
