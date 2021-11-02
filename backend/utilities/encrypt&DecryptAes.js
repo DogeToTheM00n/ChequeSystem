@@ -51,7 +51,7 @@ async function decryptMessage(enc) {
     true,
     ["encrypt", "decrypt"]
   );
-  console.log(key);
+ // console.log(key);
   return await crypto.subtle.decrypt(
     {
       name: "AES-GCM",
@@ -62,8 +62,34 @@ async function decryptMessage(enc) {
   );
 }
 
-async function Endcrpyt(f) {
+const decryptImageWithAesKey = async (encryptedBufferImg, key) => {
+  const iv = Uint8Array.from([
+    146, 184, 121, 127, 136, 74, 198, 227, 43, 182, 160, 127, 33, 155, 147, 31,
+  ]);
+  //const aesDecryptedKey = JSON.parse(await decrypt(process.env));
+  const cryptoKey = await crypto.subtle.importKey(
+    "jwk",
+    JSON.parse(process.env.AES_KEY),
+    { name: "AES-GCM" },
+    true,
+    ["encrypt", "decrypt"]
+  );
+  //console.log(cryptoKey)
+  const result = await crypto.subtle.decrypt(
+    {
+      name: "AES-GCM",
+      iv: iv,
+    },
+    cryptoKey,
+    encryptedBufferImg
+  );
+  return ab2str(result);
+};
+
+
+async function all(f) {
   const p = await encryptMessage(f);
+  console.log("p is: ",p)
   const q = await decryptMessage(p);
   const dec = new TextDecoder();
   const pp = dec.decode(q);

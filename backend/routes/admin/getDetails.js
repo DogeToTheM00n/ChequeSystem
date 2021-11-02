@@ -19,6 +19,10 @@ async function adminDashboard(req, res) {
     res.json(cheque_ids);
 }
 
+// async function verifyCheque(req,res){
+
+// }
+
 module.exports={
     adminDashboard
 }

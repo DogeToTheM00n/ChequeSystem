@@ -62,10 +62,6 @@ const chequeSchema = new Schema({
         type: String,
         required: true
     },
-    senderName: {
-        type: String,
-        required: false
-    },
     recipientName: {
         type: String,
         required: false
@@ -78,8 +74,8 @@ const chequeSchema = new Schema({
         type: String,
         required: false
     },
-    signaturePhotograph: {
-        type: imageSchema,
+    recipientAccountNo: {
+        type: String,
         required: false
     },
     chequePhotographs: {
