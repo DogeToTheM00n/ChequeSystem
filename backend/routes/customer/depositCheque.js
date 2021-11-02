@@ -95,7 +95,6 @@ async function depostCheque(req, response) {
 
 
     }
-    //fs.writeFileSync("lassan.txt", arrayBase64[0]);
 
     var micr;
     var rs;
@@ -127,7 +126,7 @@ async function depostCheque(req, response) {
                     username: obj.username,
                     chequeCode: micr,
                     chequePhotographs: arrayBase64,
-                    //senderAccountNumber:obj.account_number,
+                    senderAccountNo:obj.account_number,
                     _id: id
                 })
                 cheque.save((err) => {

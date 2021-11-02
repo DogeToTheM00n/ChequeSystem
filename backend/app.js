@@ -97,10 +97,10 @@ app.get("./api/recipientName",(req,res)=>{
   detailCheque.recipientName(req,res);
 })
 
-app.post("/abc", upload.any(),(req, res) => {
-    const f = req.files[0]
-    aesEncy.all(f.buffer)
-})
+// app.post("/abc", upload.any(),(req, res) => {
+//     const f = req.files[0]
+//     aesEncy.all(f.buffer)
+// })
 
 app.listen(8080, () => {
   console.log("Pram Server is running on port 8080");
