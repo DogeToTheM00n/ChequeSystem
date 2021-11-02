@@ -4,17 +4,17 @@ dotenv.config();
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
-
+const axios = require("axios")
 // Custom packages
 
 const db_model = require("./db/db_model.js");
 const saveUserDetail = require("./routes/admin/userDetails.js");
 const adminLogin = require("./routes/admin/adminLogin.js");
+const ad_details = require("./routes/admin/getDetails.js")
 const detailCheque =require("./routes/admin/detailCheque.js")
-const ad_details=require("./routes/admin/getDetails.js")
 const profile = require("./routes/customer/profile.js");
 const signupAndLogin = require("./routes/customer/signupAndLogin.js");
-const checkUsernameExists =require("./routes/customer/signupAndLogin.js")
+const checkUsernameExists = require("./routes/customer/signupAndLogin.js")
 const transactions = require("./routes/customer/transactions.js");
 const cheque = require("./routes/customer/depositCheque.js");
 const decrypt = require("./utilities/decrypt");
@@ -62,7 +62,7 @@ app.post("/api/admin", (req, res) => {
 app.get("/api/adminDashboard", (req, res) => {
   ad_details.adminDashboard(req, res);
 });
-  
+
 
 app.post("/api/signUp", (req, res) => {
   signupAndLogin.signUp(req, res);
@@ -73,7 +73,7 @@ app.post("/api/login", (req, res) => {
 });
 
 app.get("/api/transactions", (req, res) => {
-    console.log("Hello")
+  console.log("Hello")
   transactions.transactions(req, res);
 });
 
@@ -85,11 +85,21 @@ app.get("/api/profile", (req, res) => {
   profile.profile(req, res);
 });
 
-app.get("/api/checkUsernameExists",(req,res)=>{
-    checkUsernameExists.checkUsernameExists(req,res);
+app.get("/api/checkUsernameExists", (req, res) => {
+  checkUsernameExists.checkUsernameExists(req, res);
 })
 
-app.get("/api/detailedCheque",(req,res)=>{
+app.post("/api/captchaVerification", async (req, res) => {
+  const verifyCaptcha = await axios.post("https://www.google.com/recaptcha/api/siteverify", null, {
+    params: {
+      secret: process.env.CAPTCHA_SECRET_KEY,
+      response: req.body.token
+    }
+  })
+  res.send(verifyCaptcha.data)
+})
+
+app.get("./api/detailedCheque",(req,res)=>{
   detailCheque.detailCheque(req,res);
 })
 

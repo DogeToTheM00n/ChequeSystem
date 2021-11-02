@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import encryptWithServerPublicKey from "../../../../utilities/encrypt";
 import { connect } from "react-redux";
 import axios from "../../../../chequeAxios";
-import ReCAPTCHA from "react-google-recaptcha"
+import ReCAPTCHA from "react-google-recaptcha";
 
 class SignUp extends Component {
   state = {
@@ -27,7 +27,7 @@ class SignUp extends Component {
     secondReqErr: true,
     accountExistErr: false,
     usernameExistErr: false,
-    captchaToken: ""
+    captchaToken: "",
   };
   checkVal = (inputName) => {
     if (this.state.div === 0) {
@@ -40,8 +40,11 @@ class SignUp extends Component {
       if (inputName === "username") {
         this.setState({ usernameLenErr: this.state.username.length < 4 });
       } else if (inputName === "password") {
+        const reg =
+          "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
+        console.log(!this.state.password.match(reg));
         this.setState({
-          passwordLenErr: this.state.password.length < 8,
+          passwordLenErr: !this.state.password.match(reg),
           cPasswordErr: this.state.password !== this.state.cPassword,
         });
       } else if (inputName === "cPassword") {
@@ -101,9 +104,9 @@ class SignUp extends Component {
   submit = async (event) => {
     event.preventDefault();
     const captchaRes = await axios.post("/api/captchaVerification", {
-      token: this.state.captchaToken
-    })
-    console.log(captchaRes.data)
+      token: this.state.captchaToken,
+    });
+    console.log(captchaRes.data);
     if (captchaRes.data.success) {
       if (
         !this.state.nameErr &&
@@ -147,8 +150,8 @@ class SignUp extends Component {
     }
   };
   onChangeCaptcha = (value) => {
-    this.setState({ captchaToken: value })
-  }
+    this.setState({ captchaToken: value });
+  };
   render() {
     return (
       <>
@@ -197,7 +200,9 @@ class SignUp extends Component {
                 />
                 {this.state.passwordLenErr && (
                   <p className={classes.Error}>
-                    *Password must be of atleast 8 characters
+                    *Password must contain atleast 8 characters, one
+                    uppercase letter, one lowercase letter, one number and one
+                    special character.
                   </p>
                 )}
               </Form.Group>
@@ -305,9 +310,7 @@ class SignUp extends Component {
               </button>
             </div>
           )}
-
         </Form>
-
       </>
     );
   }
