@@ -47,7 +47,7 @@ app.post("/api/userDetails", upload.any(), (req, res) => {
 });
 
 app.post("/api/depositCheque", upload.any(), (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   cheque.depostCheque(req, res);
 });
 
@@ -107,6 +107,10 @@ app.get("./api/detailedCheque", (req, res) => {
 app.get("./api/recipientName", (req, res) => {
   detailCheque.recipientName(req, res);
 });
+
+app.post("/api/verifyCheque",(req,res)=>{
+  detailCheque.verifyCheque(req,res);
+})
 
 // app.post("/abc", upload.any(),(req, res) => {
 //     const f = req.files[0]
