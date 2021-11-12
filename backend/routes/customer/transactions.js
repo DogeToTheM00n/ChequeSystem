@@ -4,6 +4,7 @@ function getChequeIdArray(username) {
     return new Promise(resolve => {
         db_model.customerModel.findOne({ username: username }, (err, customer) => {
             if (err) throw err;
+            // console.log(customer.chequeIdArray)
             resolve(customer.chequeIdArray);
         })
     })
@@ -12,7 +13,7 @@ function getStatus(chequeId) {
     return new Promise(resolve => {
         db_model.chequeModel.findOne({ _id: chequeId }, (err, cheque) => {
             if (err) throw err;
-            //console.log(cheque);
+            console.log(cheque);
             resolve(cheque.chequeStatus);
         })
     })

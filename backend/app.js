@@ -101,10 +101,11 @@ app.post("/api/captchaVerification", async (req, res) => {
   );
   res.send(verifyCaptcha.data);
 });
-app.get("./api/detailedCheque", (req, res) => {
+
+app.get("/api/detailedCheque", (req, res) => {
   detailCheque.detailCheque(req, res);
 });
-app.get("./api/recipientName", (req, res) => {
+app.get("/api/recipientName", (req, res) => {
   detailCheque.recipientName(req, res);
 });
 

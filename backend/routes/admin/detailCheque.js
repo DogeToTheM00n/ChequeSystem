@@ -5,35 +5,41 @@ function getSenderSigature(_id){
     return new Promise(resolve =>{
         db_model.userDetailsModel.findOne({_id:_id},(err,result)=>{
             if(err) throw err;
+            // console.log(result);
             resolve(result.accountHolderSignature.buffer);
         })
     })
 }
-function getFileArray(cheque_id) {
+function getFileArrayAndAccountNum(cheque_id) {
     return new Promise(resolve =>{
-        db_model.chequeModel.findOne({cheque_id:_id},(err,result)=>{
+        db_model.chequeModel.findOne({_id:cheque_id},(err,result)=>{
             if (err) throw err;
-            resolve(result.chequePhotographs);
+            resolve({chequePhoto:result.chequePhotographs,
+                    senderAccountNo:result.senderAccountNumber});
         })
     })
 }
+
 async function detailCheque(req,res){
-    const signatureImagebuffer = await getSenderSigature(req.query.accountNumber);
+    const obj = await getFileArrayAndAccountNum(req.query.cheque_id);
+    const acNo=obj.senderAccountNo;
+    console.log(obj);
+    const signatureImagebuffer = await getSenderSigature(acNo);
     const signatureImagebase64=  signatureImagebuffer.toString('base64');
-    const fileArray = await getFileArray(req.query.cheque_id);
-  
+    const photo= obj.chequePhoto;
     res.json({
         signatureImagebase64,
-        fileArray
+        photo
     })
 }
 function getrecipientName(account_number){
     return new Promise(resolve=>{
-        db_model.userDetailsModel.findOne({recipientAccountNo:_id},(err,result)=>{
+        db_model.userDetailsModel.findOne({_id:account_number},(err,result)=>{
             if(err) throw err;
+            // console.log(result);
             resolve(result.accountHolderName);
         })
-        resolve(null);
+        // resolve(null);
     })
 }
 
@@ -41,8 +47,6 @@ async function recipientName(req,res){
     const name = await getrecipientName(req.query.recipientAccountNo);
     res.json({recipientName : name});
 }
-
-
 
 function getSenderAccountNoAndAmount(_id){ 
     return new Promise((resolve) =>{
@@ -60,15 +64,23 @@ function getSenderAccountNoAndAmount(_id){
     })
 }
 
-function updateCheque(_id,amount,name,accountNumber){
+function updateCheque(_id,amount,name,accountNumber,status){
     return new Promise((resolve)=>{
         const update = { 
             amount: amount,
             recipientName:name,
             recipientAccountNo: accountNumber,
-            chequeStatus:1
+            chequeStatus:status
             };
         db_model.chequeModel.findOneAndUpdate({_id:_id},{ $set : {update},},(err,result)=>{
+            if(err) throw err;
+            resolve(true);
+        })
+    })
+}
+function changeStatus(_id,status){
+    return new Promise(resolve =>{
+        db.model.chequeModel.findOneAndUpdate({_id:_id},{ $set : {chequeStatus:status},},(err, result) =>{
             if(err) throw err;
             resolve(true);
         })
@@ -95,17 +107,19 @@ function changeAmount(accountNumber,_amount){
 
 async function verifyCheque(req, res){
     const status =req.body.status;
-    if(status==false) res.json(false);
+    if(status==false) {
+        await changeStatus(req.body._id,1);
+    }
     else{
         const decryptObject = JSON.parse(await decrypt.decrypt(req.body.object));
-        const obj =getSenderAccountNoAndAmount(decryptObject._id);
+        const obj =getSenderAccountNoAndAmount(req.body._id);
 
         if(obj.senderBalance< decryptObject.balance) res.json("LOW ACCOUNT BALANCE!");
-        await updateCheque(decryptObject._id, decryptObject.amount,decryptObject.recipientName,
-                            decryptObject.recipientAccountNo);
+        await updateCheque(req.body._id, decryptObject.amount,decryptObject.recipientName,
+                            decryptObject.recipientAccountNo,1);
         await changeAmount(decryptObject.recipientAccountNo,decryptObject.amount);
         await changeAmount(obj.senderAccountNo,-decryptObject.amount);
-        await removeCheque(obj.senderAccountNo,decryptObject._id);
+        await removeCheque(obj.senderAccountNo,req.body._id);
         res.json(true);
     }   
 }

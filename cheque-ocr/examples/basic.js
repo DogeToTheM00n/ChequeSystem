@@ -3,15 +3,16 @@ const https = require('https');
 const multer = require('multer');
 const axios = require('axios');
 var cors = require('cors')
-app.use(cors())
+
 
 var fs = require('fs'),
   chequeOCR = require('../index');
 
 const app = express()
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
+app.use(cors())
 const upload = multer()
 
 // var image = fs.readFileSync('./test/fixtures/sample_cibc.jpg');
@@ -32,9 +33,9 @@ app.post('/secret/ocr', upload.any(), async (req, res) => {
   // var image = fs.readFileSync('./test/fixtures/sample_cibc.jpg');
   console.log("Attempting to OCR a sample cheque image...");
   var img = await convertToImage(req.body.image);
-  console.log(image)
+  console.log(img)
  // console.log(req.files)
-  chequeOCR(image, function (err, result) {
+  chequeOCR(img, function (err, result) {
     if (err) {
       console.warn("Something went wrong:");
       console.warn(err);

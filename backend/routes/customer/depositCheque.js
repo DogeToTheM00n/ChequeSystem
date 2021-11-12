@@ -72,6 +72,15 @@ function _base64ToArrayBuffer(base64) {
   });
 }
 
+function retriveACno(username){
+    return new Promise(resolve=>{
+      db_model.customerModel.findOne({username:username},(err, result)=>{
+        if(err) throw err;
+        resolve(result.accountNumber);
+      })
+    })
+}
+
 async function depostCheque(req, response) {
   let arrayBase64 = [];
   let encryptedImages = [];
@@ -111,9 +120,11 @@ async function depostCheque(req, response) {
       } else {
         const obj = JSON.parse(await decrypt.decrypt(req.body.obj));
         console.log(obj);
+        const ACnumber = await retriveACno(obj.username);
         const id = obj.username + "@" + (await CountDocuments(obj.username));
         const cheque = new db_model.chequeModel({
           username: obj.username,
+          senderAccountNumber:ACnumber,
           chequeCode: micr,
           chequePhotographs: encryptedImages,
           senderAccountNo: obj.account_number,
