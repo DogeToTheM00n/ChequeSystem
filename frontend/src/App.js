@@ -11,7 +11,6 @@ import axios from "./chequeAxios";
 import generateClientKeyPair from "./utilities/generateClientKeyPair";
 import React, { Component } from "react";
 import AdminDashboard from "./containers/AdminDashboard/AdminDashboard";
-
 class App extends Component {
   componentDidMount() {
     axios.get("/api/getPublicKey").then((res) => {

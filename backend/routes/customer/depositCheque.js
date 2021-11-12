@@ -74,8 +74,10 @@ function _base64ToArrayBuffer(base64) {
 
 async function depostCheque(req, response) {
   let arrayBase64 = [];
+  let encryptedImages = [];
   //console.log(req.body.images[0])
   for (var i = 0; i < req.body.images.length; i++) {
+    encryptedImages.push(req.body.images[i])
     const a = await _base64ToArrayBuffer(req.body.images[i]);
     //console.log("required encryption:", a)
     const b = await aesEncandDec.decryptMessage(a);
@@ -113,7 +115,7 @@ async function depostCheque(req, response) {
         const cheque = new db_model.chequeModel({
           username: obj.username,
           chequeCode: micr,
-          chequePhotographs: arrayBase64,
+          chequePhotographs: encryptedImages,
           senderAccountNo: obj.account_number,
           _id: id,
         });

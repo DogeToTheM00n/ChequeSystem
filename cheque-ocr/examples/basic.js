@@ -19,7 +19,6 @@ const upload = multer()
 function convertToImage(base64) {
   return new Promise(resolve => {
           // create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
-          // var bitmap = new Buffer(base64, 'base64');
           var bitmap = Buffer.from(base64, 'base64');
           // write buffer to file
           resolve(bitmap)
