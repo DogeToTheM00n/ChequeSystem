@@ -10,21 +10,18 @@ import ab2str from "../../utilities/arrayBufferToString";
 
 const UploadChequeModal = (props) => {
   const [validated, setValidated] = useState(false);
-  const [chequeNumber, setChequeNumber] = useState("");
   const [frontImage, setFrontImage] = useState();
   const [backImage, setBackImage] = useState();
   const aesKey = useSelector((state) => state.encryptedAesKey);
   const user = useSelector((state) => state.user);
   const serverPublicKey = useSelector((state) => state.key);
   const formRef = useRef(null);
+  const [depositError, setDepositError] = useState("")
   const onFrontImageChange = (event) => {
     setFrontImage(event.target.files[0]);
   };
   const onBackImageChange = (event) => {
     setBackImage(event.target.files[0]);
-  };
-  const onChangeChequeNumber = (event) => {
-    setChequeNumber(event.target.value);
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,10 +30,6 @@ const UploadChequeModal = (props) => {
     if (form.checkValidity() === false) {
       event.stopPropagation();
     } else {
-      console.log("yes");
-      console.log(chequeNumber);
-      console.log(frontImage);
-      console.log(backImage);
       function readFileDataAsArrayBuffer(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -59,7 +52,6 @@ const UploadChequeModal = (props) => {
         backImageBuffer,
         aesKey
       );
-      console.log(encryptedBufferImg1)
       // const decryptedImg1 = await decryptImageWithAesKey(
       //   encryptedBufferImg1,
       //   aesKey
@@ -71,19 +63,20 @@ const UploadChequeModal = (props) => {
       // document.querySelector(
       //   "body"
       // ).innerHTML = `<img src="data:image/png;base64,${decryptedImg2}"/>`;
-      const userData = await encrypt({ username: user.username, cheque_code: chequeNumber }, serverPublicKey);
+      const userData = await encrypt({ username: user.username, cheque_code: "-1" }, serverPublicKey);
       const data = {
         images: [ab2str(encryptedBufferImg1), ab2str(encryptedBufferImg2)],
         obj: userData,
       };
-      console.log(data.images);
       const result = await axios.post("/api/depositCheque", data);
-      console.log(result.data);
-      if(result.data){
-        setChequeNumber("")
+      if(result.data=="Cheque deposited successfully"){
         setValidated(false)
         props.handleClose()
         props.setReload(!props.reload)
+      }
+      else{
+        setValidated(false)
+        setDepositError(result.data)
       }
     }
   };
@@ -108,7 +101,7 @@ const UploadChequeModal = (props) => {
       </Modal.Header>
       <Modal.Body>
         <Form ref={formRef} noValidate validated={validated} onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>Cheque Number</Form.Label>
             <Form.Control
               required
@@ -117,7 +110,7 @@ const UploadChequeModal = (props) => {
               value={chequeNumber}
               onChange={onChangeChequeNumber}
             />
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group controlId="formFile" className="mb-3">
             <Form.Label>Front Image</Form.Label>
             <Form.Control required type="file" onChange={onFrontImageChange} />
@@ -126,6 +119,7 @@ const UploadChequeModal = (props) => {
             <Form.Label>Back Image</Form.Label>
             <Form.Control required type="file" onChange={onBackImageChange} />
           </Form.Group>
+          {depositError?<p className={classes.Error}>{depositError}</p>:null}
           <Button type="submit" className={classes.BootstrapButton}>
             Deposit
           </Button>

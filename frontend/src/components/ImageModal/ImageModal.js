@@ -20,9 +20,12 @@ const ImageModal = (props) => {
                     }
                 }
             )
+            console.log(str2ab(res.data.chequePhotographs[0]).buffer)
             const res1 = await decryptImageWithAesKey(str2ab(res.data.chequePhotographs[0]).buffer, encryptedAesKey)
+            // console.log(res1)
             setFrontImage(res1)
             const res2 = await decryptImageWithAesKey(str2ab(res.data.chequePhotographs[1]).buffer, encryptedAesKey)
+            // console.log(res2)
             setBackImage(res2)
         }
         if (props.showImageModal)
