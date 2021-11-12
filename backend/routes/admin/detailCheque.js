@@ -68,7 +68,7 @@ function updateCheque(_id,amount,name,accountNumber){
             recipientAccountNo: accountNumber,
             chequeStatus:1
             };
-        db_model.chequeModel.findOneAndUpdate({_id:_id},{ set$ : {update}},(err,result)=>{
+        db_model.chequeModel.findOneAndUpdate({_id:_id},{ $set : {update},},(err,result)=>{
             if(err) throw err;
             resolve(true);
         })
