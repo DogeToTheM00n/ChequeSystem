@@ -15,13 +15,13 @@ const CustomerDashboard = () => {
   if (!auth) {
     history.push("/auth");
   } else {
-    if (user.name === null) {
+    if (user.name === "") {
       history.push("/adminDashboard");
     }
   }
   return (
     auth &&
-    user.name !== null && (
+    user.name !== "" && (
       <div>
         <UploadChequeModal
           showDepositModal={showDepositModal}

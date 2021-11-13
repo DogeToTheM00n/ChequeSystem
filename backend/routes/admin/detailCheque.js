@@ -5,7 +5,7 @@ function getSenderSigature(_id){
     return new Promise(resolve =>{
         db_model.userDetailsModel.findOne({_id:_id},(err,result)=>{
             if(err) throw err;
-            // console.log(result);
+            console.log(result);
             resolve(result.accountHolderSignature.buffer);
         })
     })
@@ -23,7 +23,6 @@ function getFileArrayAndAccountNum(cheque_id) {
 async function detailCheque(req,res){
     const obj = await getFileArrayAndAccountNum(req.query.cheque_id);
     const acNo=obj.senderAccountNo;
-    console.log(obj);
     const signatureImagebuffer = await getSenderSigature(acNo);
     const signatureImagebase64=  signatureImagebuffer.toString('base64');
     const photo= obj.chequePhoto;

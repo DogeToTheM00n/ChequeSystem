@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import axios from "../../chequeAxios"
 import decryptImageWithAesKey from "../../utilities/decryptFile"
 import { useSelector } from "react-redux"
-import ab2str from "../../utilities/arrayBufferToString"
 import str2ab from "../../utilities/stringToArrayBuffer"
 const ImageModal = (props) => {
     const encryptedAesKey = useSelector((state) => state.encryptedAesKey)

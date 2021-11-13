@@ -27,9 +27,9 @@ class App extends Component {
           this.props.location.pathname !== "/admin" && <Menu />}
         <Switch>
           <Route path="/chequeVerify" component={ChequeVerify} />
+          <Route path="/adminDashboard" component={AdminDashboard} />
           <Route path="/auth" component={Auth} />
           <Route path="/admin" component={Auth} />
-          <Route path="/adminDashboard" component={AdminDashboard} />
           <Route path="/" component={CustomerDashboard} />
           <Route path="*" component={Auth} />
         </Switch>

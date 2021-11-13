@@ -52,13 +52,12 @@ class SignIn extends Component {
                 obj: encryptedData,
                 public_key: this.props.clientPublicKey,
               });
-              console.log(res.data);
               if (res.data) {
                 // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
                 //   console.log(JSON.parse(decryptedData));
                 // });
                 const user = {
-                  name: res.data.name,
+                  name: "",
                   username: res.data.username,
                 };
                 this.props.setAuthTrue(user);
