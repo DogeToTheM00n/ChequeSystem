@@ -2,6 +2,7 @@ const db_model = require("../../db/db_model.js");
 const decrypt = require("../../utilities/decrypt");
 const encrypt = require("../../utilities/encrypt");
 const bcrypt = require("bcrypt");
+const jwtHelper = require("../auth/jwt.js");
 const saltRounds = 10;
 
 function checkAcNum(accountNumber) {
@@ -101,34 +102,36 @@ async function signUp(req, res) {
 
 async function logIn(req, res) {
   const credentials = JSON.parse(await decrypt.decrypt(req.body.obj));
-  console.log(credentials);
+  // console.log(credentials);
   const flag = await checkUsername(credentials.username);
-  console.log(flag);
+  // console.log(flag);
   if (flag != null) {
     bcrypt.compare(credentials.password, flag.password, async (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.log(result);
       if (result) {
         const encrypted_aes_key = await encrypt.encryptWithClientPublicKey(
           process.env.AES_KEY,
           req.body.public_key
         );
-        console.log(encrypted_aes_key);
+        // console.log(encrypted_aes_key);
         user = {
           username: flag.username,
           mobileNumber: flag.mobileNumber,
           name: flag.name,
           encrypted_aes_key: encrypted_aes_key,
         };
-        console.log(user);
-        res.json(user);
+        // console.log(user);
+        const accessToken = jwtHelper.generateAccessToken(user)
+        // console.log("A C C E S S   T O K E N ", accessToken);
+        res.json({user:user, accessToken:accessToken});
       } else {
-        console.log("In password");
+        // console.log("In password");
         res.send(401);
       }
     });
   } else {
-    console.log("null");
+    // console.log("null");
     res.send(401);
   }
 }

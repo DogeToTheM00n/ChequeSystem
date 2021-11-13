@@ -2,6 +2,7 @@ const db_model = require('../../db/db_model.js')
 const decrypt = require("../../utilities/decrypt");
 const encrypt = require("../../utilities/encrypt");
 const bcrypt = require('bcrypt');
+const jwtHelper = require("../auth/jwt.js");
 
 function checkUsername(username) {
     return new Promise(resolve => {
@@ -44,7 +45,10 @@ async function adminLogin(req, res) {
         bcrypt.compare(credentials.password, admin.password, (err, result) => {
             if (err) throw err;
             if (result) {
-                res.json({ username: admin.username,encrypted_aes_key: encrypted_aes_key });
+                const user={ username: admin.username,encrypted_aes_key: encrypted_aes_key };
+                const accessToken = jwtHelper.generateAccessToken(user)
+                res.json({ username: admin.username, encrypted_aes_key: encrypted_aes_key, accessToken:accessToken});
+
             } else {
                 res.send(401);
             }

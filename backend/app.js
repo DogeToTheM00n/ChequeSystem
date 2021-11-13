@@ -19,6 +19,7 @@ const transactions = require("./routes/customer/transactions.js");
 const cheque = require("./routes/customer/depositCheque.js");
 const decrypt = require("./utilities/decrypt");
 const aesEncy = require("./utilities/encrypt&DecryptAes.js");
+const jwtHelper = require("./routes/auth/jwt.js");
 
 const app = express();
 app.use(express.json({ limit: "50mb" }));
@@ -46,7 +47,7 @@ app.post("/api/userDetails", upload.any(), (req, res) => {
   saveUserDetail.saveUserDetail(req, res);
 });
 
-app.post("/api/depositCheque", upload.any(), (req, res) => {
+app.post("/api/depositCheque",jwtHelper.authenticateToken, upload.any(), (req, res) => {
   // console.log(req.body);
   cheque.depostCheque(req, res);
 });
@@ -59,7 +60,7 @@ app.post("/api/admin", (req, res) => {
   saveUserDetail.createAdmin(req, res);
 });
 
-app.get("/api/adminDashboard", (req, res) => {
+app.get("/api/adminDashboard",jwtHelper.authenticateToken, (req, res) => {
   ad_details.adminDashboard(req, res);
 });
 
@@ -71,16 +72,16 @@ app.post("/api/login", (req, res) => {
   signupAndLogin.logIn(req, res);
 });
 
-app.get("/api/transactions", (req, res) => {
-  console.log("Hello");
+app.get("/api/transactions",jwtHelper.authenticateToken, (req, res) => {
+  // console.log("Hello");
   transactions.transactions(req, res);
 });
 
-app.get("/api/transactionDetail", (req, res) => {
+app.get("/api/transactionDetail",jwtHelper.authenticateToken, (req, res) => {
   transactions.transactionDetail(req, res);
 });
 
-app.get("/api/profile", (req, res) => {
+app.get("/api/profile",jwtHelper.authenticateToken, (req, res) => {
   profile.profile(req, res);
 });
 
@@ -102,14 +103,14 @@ app.post("/api/captchaVerification", async (req, res) => {
   res.send(verifyCaptcha.data);
 });
 
-app.get("/api/detailedCheque", (req, res) => {
+app.get("/api/detailedCheque",jwtHelper.authenticateToken, (req, res) => {
   detailCheque.detailCheque(req, res);
 });
-app.get("/api/recipientName", (req, res) => {
+app.get("/api/recipientName",jwtHelper.authenticateToken, (req, res) => {
   detailCheque.recipientName(req, res);
 });
 
-app.post("/api/verifyCheque",(req,res)=>{
+app.post("/api/verifyCheque",jwtHelper.authenticateToken,(req,res)=>{
   detailCheque.verifyCheque(req,res);
 })
 
