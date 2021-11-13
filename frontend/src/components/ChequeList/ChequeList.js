@@ -14,6 +14,7 @@ const ChequeList = (props) => {
         params: { username: username },
       });
       setTransactions(res.data);
+      console.log(res.data)
     };
     func();
   }, [props.reload]);

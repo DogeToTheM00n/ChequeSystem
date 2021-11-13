@@ -155,7 +155,7 @@ async function verifyCheque(req, res) {
     );
     await changeAmount(decryptObject.recipientAccountNo, decryptObject.amount);
     await changeAmount(obj.senderAccountNo, -decryptObject.amount);
-    await removeCheque(obj.senderAccountNo, req.body._id);
+    // await removeCheque(obj.senderAccountNo, req.body._id);
     res.json(true);
   }
 }

@@ -4,7 +4,7 @@ function getChequeIdArray(username) {
     return new Promise(resolve => {
         db_model.customerModel.findOne({ username: username }, (err, customer) => {
             if (err) throw err;
-            // console.log(customer.chequeIdArray)
+            console.log("Results: ", customer.chequeIdArray)
             resolve(customer.chequeIdArray);
         })
     })
@@ -32,7 +32,7 @@ async function transactions(req, res) {
         }
         chequeArray.push(obj);
     }
-    console.log(chequeArray);
+    // console.log(chequeArray);
     res.json(chequeArray);
 }
 
