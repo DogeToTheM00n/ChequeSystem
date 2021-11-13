@@ -7,6 +7,7 @@ import encryptWithServerPublicKey from "../../../utilities/encrypt"
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "../../../chequeAxios"
+import { useHistory } from "react-router";
 
 const Left = (props) => {
   const [state, setState] = useState({
@@ -24,6 +25,7 @@ const Left = (props) => {
     cCodeVerify: false,
   })
   const public_key = useSelector((state) => state.key)
+  const history = useHistory()
   const approveCheque = async () => {
     let reqObj = {
       status: true,
@@ -34,7 +36,6 @@ const Left = (props) => {
       recipientName: state.recipientName,
       recipientAccountNo: state.accountNumber
     }
-    console.log(obj)
     const encryptedObj = await encryptWithServerPublicKey(obj, public_key)
     reqObj = {...reqObj, object: encryptedObj}
     const req = async () => {
@@ -42,7 +43,20 @@ const Left = (props) => {
       console.log(res)
     }
     req()
-    console.log(reqObj)
+    history.push("/adminDashboard")
+  }
+
+  const declineCheque = async () => {
+    let reqObj = {
+      status: false,
+      _id: props.chequeCode,
+    }
+    const req = async () => {
+      const res = await axios.post("/api/verifyCheque", reqObj)
+      console.log(res)
+    }
+    req()
+    history.push("/adminDashboard")
   }
   useEffect(() => {
     if (state.err === "" && state.accountVerify === 1 && state.recipientNameCheck) {
@@ -53,10 +67,10 @@ const Left = (props) => {
   return (
     <div className={classes.Left}>
       {div === 1 && (
-        <Div1 setDiv={setDiv} verifyState={verifyState} setVerifyState={setVerifyState} acNo={props.acNo} MICR={props.MICR} />
+        <Div1 setDiv={setDiv} verifyState={verifyState} setVerifyState={setVerifyState} acNo={props.acNo} MICR={props.MICR} declineCheque={declineCheque}/>
       )}
-      {div === 2 && <Div2 setDiv={setDiv} state={state} setState={setState} />}
-      {div === 3 && <Div3 setDiv={setDiv} signature={props.signature} approveCheque={approveCheque}/>}
+      {div === 2 && <Div2 setDiv={setDiv} state={state} setState={setState} declineCheque={declineCheque}/>}
+      {div === 3 && <Div3 setDiv={setDiv} signature={props.signature} approveCheque={approveCheque} declineCheque={declineCheque}/>}
     </div>
   );
 };

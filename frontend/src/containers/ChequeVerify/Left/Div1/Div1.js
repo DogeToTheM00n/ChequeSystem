@@ -52,7 +52,7 @@ const Div1 = (props) => {
       </InputGroup>
       <div className={classes.Error}>{err ? err : null}</div>
       <div className={classes.BtnGroup}>
-        <button className={classes.DeclineBtn}>Decline</button>
+        <button className={classes.DeclineBtn} onClick={() => props.declineCheque()}>Decline</button>
         <button className={classes.NextBtn} onClick={nextHandler}>
           Next
         </button>

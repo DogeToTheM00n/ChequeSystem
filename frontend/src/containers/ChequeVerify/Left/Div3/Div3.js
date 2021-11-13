@@ -30,7 +30,7 @@ const Div3 = (props) => {
         <InputGroup.Checkbox className={classes.Checkbox} checked={sigVerify} onChange={(evt) => setSigVerify(evt.target.checked)}/>
       </InputGroup>
       <div className={classes.BtnGroup}>
-        <button className={classes.DeclineBtn}>
+        <button className={classes.DeclineBtn} onClick={() => props.declineCheque()}>
           <i className="fas fa-times"></i> Decline
         </button>
         <button className={classes.NextBtn} onClick={approveHandler}>

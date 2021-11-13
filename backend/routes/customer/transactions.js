@@ -50,9 +50,7 @@ async function transactionDetail(req, res) {
     res.json({chequePhotographs: chequePhotographs});
 }
 
-
-
 module.exports = {
     transactions,
-    transactionDetail
+    transactionDetail,
 }

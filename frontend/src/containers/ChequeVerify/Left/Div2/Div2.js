@@ -118,7 +118,7 @@ const Div2 = (props) => {
         />
       </InputGroup>
       <div className={classes.BtnGroup}>
-        <button className={classes.DeclineBtn}>
+        <button className={classes.DeclineBtn} onClick={() => props.declineCheque()}>
           <i className="fas fa-times"></i> Decline
         </button>
         <button className={classes.NextBtn} onClick={nextHandler}>

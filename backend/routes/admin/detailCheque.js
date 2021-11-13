@@ -95,7 +95,7 @@ function updateCheque(_id, amount, name, accountNumber, status) {
 }
 function changeStatus(_id, status) {
   return new Promise((resolve) => {
-    db.model.chequeModel.findOneAndUpdate(
+    db_model.chequeModel.findOneAndUpdate(
       { _id: _id },
       { $set: { chequeStatus: status } },
       (err, result) => {
