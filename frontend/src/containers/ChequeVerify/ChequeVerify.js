@@ -17,6 +17,8 @@ const ChequeVerify = () => {
   const [frontImage, setFrontImage] = useState("");
   const [backImage, setBackImage] = useState("");
   const [signature, setSignature] = useState("");
+  const [acNo, setAcNo] = useState("");
+  const [MICR, setMICR] = useState("");
   if (!auth) {
     history.push("/admin");
   } else {
@@ -31,7 +33,8 @@ const ChequeVerify = () => {
         const res = await axios.get("/api/detailedCheque", {
           params: { cheque_id: value },
         });
-        console.log(res);
+        console.log(res.data);
+        setID(value);
         const res1 = await decryptImageWithAesKey(
           str2ab(res.data.photo[0]).buffer,
           encryptedAesKey
@@ -43,6 +46,8 @@ const ChequeVerify = () => {
         );
         setBackImage(res2);
         setSignature(res.data.signatureImagebase64);
+        setAcNo(res.data.acNo);
+        setMICR(res.data.chequeCode);
       }
     };
     func();
@@ -51,13 +56,13 @@ const ChequeVerify = () => {
     auth &&
     user.name === "" && (
       <div className={classes.ChequeVerify}>
-        <p className={classes.P}>MICR Code</p>
+        <p className={classes.P}>Transaction ID: {id}</p>
         <div className={classes.Parent}>
           <div className={classes.Left}>
-            <Left />
+            <Left acNo={acNo} MICR={MICR} signature={signature} />
           </div>
           <div className={classes.Right}>
-            <ImageCarousel frontImage={frontImage} backImage={signature} />
+            <ImageCarousel frontImage={frontImage} backImage={backImage} />
           </div>
         </div>
       </div>

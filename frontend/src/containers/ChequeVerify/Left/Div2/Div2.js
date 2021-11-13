@@ -1,33 +1,63 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import classes from "./Div2.module.css";
+import axios from "../../../../chequeAxios";
 import Form from "react-bootstrap/Form";
+import { InputGroup } from "react-bootstrap";
 
 const Div2 = (props) => {
-  const handleVerify = () => {
-    //axios request to verify
-    props.setState({...props.state, accountVerify: 1})
-  }
+  const [recipientName, setRecipientName] = useState("");
+  const handleVerify = async () => {
+    //axios request to verify and get payee name
+    const res = await axios.get("/api/recipientName", {
+      params: { recipientAccountNo: props.state.accountNumber },
+    });
+    setRecipientName(res.data.recipientName);
+    props.setState({
+      ...props.state,
+      accountVerify: 1,
+    });
+  };
 
   const changeHandler = (evt) => {
-    props.setState({...props.state, [evt.target.name]: evt.target.value })
-    console.log(props.state)
-  }
+    props.setState({ ...props.state, [evt.target.name]: evt.target.value });
+    console.log(props.state);
+  };
 
-  const nextHandler = () => {
+  const nextHandler = async () => {
     const reg = /^\d{15}$/;
     const amtreg = "^[1-9][0-9]*$";
-    if(!props.state.accountNumber.match(reg) || !props.state.amount.match(amtreg)){
-      props.setState({...props.state, err: "*Invalid Account Number or Amount"})
+    if (
+      !props.state.accountNumber.match(reg) ||
+      !props.state.amount.match(amtreg)
+    ) {
+      props.setState({
+        ...props.state,
+        err: "*Invalid Account Number or Amount",
+      });
+    } else {
+      await props.setState({ ...props.state, err: "" });
+      console.log(props.state);
+      if (
+        props.state.err === "" &&
+        props.state.accountVerify === 1 &&
+        props.state.recipientNameCheck
+      ) {
+        console.log("juigh");
+        props.setDiv(3);
+      }
     }
-    else{
-      props.setState({...props.state, err: ""})
-    }
-    console.log(props.state.accountNumber)
-  }
+  };
 
   return (
     <div>
-      <p className={classes.P2} onClick={() => { props.setDiv(1) }}><i class="fas fa-chevron-left"></i> Back</p>
+      <p
+        className={classes.P2}
+        onClick={() => {
+          props.setDiv(1);
+        }}
+      >
+        <i class="fas fa-chevron-left"></i> Back
+      </p>
       <Form.Group
         className="mb-4"
         controlId="account"
@@ -45,10 +75,11 @@ const Div2 = (props) => {
             onChange={changeHandler}
             value={props.state.accountNumber}
           />
-          <button className={classes.VerifyBtn} onClick={handleVerify}>Verify</button>
+          <button className={classes.VerifyBtn} onClick={handleVerify}>
+            Verify
+          </button>
         </div>
-        <div>
-        </div>
+        <div></div>
       </Form.Group>
       <Form.Group
         className="mb-4"
@@ -66,15 +97,39 @@ const Div2 = (props) => {
           value={props.state.amount}
         />
         <div className={classes.Error}>
-          {props.state.err?props.state.err:null}
+          {props.state.err ? props.state.err : null}
         </div>
       </Form.Group>
+      <InputGroup
+        className={classes.Row}
+        size="lg"
+        style={{ width: "80%", margin: "auto" }}
+      >
+        <div>
+          <p className={classes.PTitle}>Recipient Name</p>
+          <p className={classes.PDetail}>{recipientName}</p>
+        </div>
+        <InputGroup.Checkbox
+          className={classes.Checkbox}
+          onChange={(event) =>
+            props.setState({
+              ...props.state,
+              recipientNameCheck: event.target.checked,
+            })
+          }
+          checked={props.state.recipientNameCheck}
+        />
+      </InputGroup>
       <div className={classes.BtnGroup}>
-        <button className={classes.DeclineBtn}><i className="fas fa-times"></i> Decline</button>
-        <button className={classes.NextBtn} onClick={nextHandler}><i className="fas fa-check"></i> Next</button>
+        <button className={classes.DeclineBtn}>
+          <i className="fas fa-times"></i> Decline
+        </button>
+        <button className={classes.NextBtn} onClick={nextHandler}>
+          <i className="fas fa-check"></i> Next
+        </button>
       </div>
     </div>
   );
-}
+};
 
 export default Div2;
