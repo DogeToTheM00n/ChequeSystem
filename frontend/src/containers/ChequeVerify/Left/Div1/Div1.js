@@ -1,21 +1,22 @@
 import { InputGroup } from "react-bootstrap";
 import classes from "./Div1.module.css";
-import { useState } from "react";
+import { useState, createRef } from "react";
 
 const Div1 = (props) => {
-  const [checkboxCount, setCheckBoxCount] = useState(0);
   const [err, setErr] = useState("");
   const changeHandler = (evt) => {
-    if (evt.target.checked) {
-      setCheckBoxCount(checkboxCount + 1);
-    } else {
-      setCheckBoxCount(checkboxCount - 1);
-    }
-    console.log(checkboxCount);
+    // if (evt.target.checked) {
+    //   setCheckBoxCount(checkboxCount + 1);
+    // } else {
+    //   setCheckBoxCount(checkboxCount - 1);
+    // }
+    props.setVerifyState({
+      ...props.verifyState, [evt.target.name]: evt.target.checked
+    })
   };
 
   const nextHandler = () => {
-    if (checkboxCount === 4) {
+    if (props.verifyState.dateVerify && props.verifyState.amountVerify && props.verifyState.acNoVerify && props.verifyState.cCodeVerify) {
       props.setDiv(2);
     } else {
       setErr("*Please verify all details");
@@ -23,31 +24,31 @@ const Div1 = (props) => {
   };
   return (
     <div>
-      <InputGroup onChange={changeHandler} className={classes.Row} size="lg">
+      <InputGroup className={classes.Row} size="lg">
         <div>
           <p className={classes.PTitle}>Date</p>
         </div>
-        <InputGroup.Checkbox className={classes.Checkbox} />
+        <InputGroup.Checkbox className={classes.Checkbox} name="dateVerify" checked={props.verifyState.dateVerify} onChange={changeHandler}/>
       </InputGroup>
-      <InputGroup onChange={changeHandler} className={classes.Row} size="lg">
+      <InputGroup className={classes.Row} size="lg">
         <div>
           <p className={classes.PTitle}>Amount</p>
         </div>
-        <InputGroup.Checkbox className={classes.Checkbox} />
+        <InputGroup.Checkbox className={classes.Checkbox} name="amountVerify" checked={props.verifyState.amountVerify} onChange={changeHandler} />
       </InputGroup>
-      <InputGroup onChange={changeHandler} className={classes.Row} size="lg">
+      <InputGroup className={classes.Row} size="lg">
         <div>
           <p className={classes.PTitle}>Account Number</p>
           <p className={classes.PDetail}>{props.acNo}</p>
         </div>
-        <InputGroup.Checkbox className={classes.Checkbox} />
+        <InputGroup.Checkbox className={classes.Checkbox} name="acNoVerify" checked={props.verifyState.acNoVerify} onChange={changeHandler}/>
       </InputGroup>
-      <InputGroup onChange={changeHandler} className={classes.Row} size="lg">
+      <InputGroup className={classes.Row} size="lg">
         <div>
           <p className={classes.PTitle}>Cheque Code</p>
           <p className={classes.PDetail}>{props.MICR}</p>
         </div>
-        <InputGroup.Checkbox className={classes.Checkbox} />
+        <InputGroup.Checkbox className={classes.Checkbox} name="cCodeVerify" checked={props.verifyState.cCodeVerify} onChange={changeHandler}/>
       </InputGroup>
       <div className={classes.Error}>{err ? err : null}</div>
       <div className={classes.BtnGroup}>

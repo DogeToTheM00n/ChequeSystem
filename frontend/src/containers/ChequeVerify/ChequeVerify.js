@@ -59,7 +59,7 @@ const ChequeVerify = () => {
         <p className={classes.P}>Transaction ID: {id}</p>
         <div className={classes.Parent}>
           <div className={classes.Left}>
-            <Left acNo={acNo} MICR={MICR} signature={signature} />
+            <Left acNo={acNo} MICR={MICR} signature={signature} chequeCode={id}/>
           </div>
           <div className={classes.Right}>
             <ImageCarousel frontImage={frontImage} backImage={backImage} />

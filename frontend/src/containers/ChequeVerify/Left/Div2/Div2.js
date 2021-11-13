@@ -5,16 +5,15 @@ import Form from "react-bootstrap/Form";
 import { InputGroup } from "react-bootstrap";
 
 const Div2 = (props) => {
-  const [recipientName, setRecipientName] = useState("");
   const handleVerify = async () => {
     //axios request to verify and get payee name
     const res = await axios.get("/api/recipientName", {
       params: { recipientAccountNo: props.state.accountNumber },
     });
-    setRecipientName(res.data.recipientName);
     props.setState({
       ...props.state,
       accountVerify: 1,
+      recipientName: res.data.recipientName 
     });
   };
 
@@ -35,14 +34,12 @@ const Div2 = (props) => {
         err: "*Invalid Account Number or Amount",
       });
     } else {
-      await props.setState({ ...props.state, err: "" });
-      console.log(props.state);
+      props.setState({ ...props.state, err: "" });
       if (
         props.state.err === "" &&
         props.state.accountVerify === 1 &&
         props.state.recipientNameCheck
       ) {
-        console.log("juigh");
         props.setDiv(3);
       }
     }
@@ -107,7 +104,7 @@ const Div2 = (props) => {
       >
         <div>
           <p className={classes.PTitle}>Recipient Name</p>
-          <p className={classes.PDetail}>{recipientName}</p>
+          <p className={classes.PDetail}>{props.state.recipientName}</p>
         </div>
         <InputGroup.Checkbox
           className={classes.Checkbox}
