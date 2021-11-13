@@ -74,10 +74,10 @@ const chequeSchema = new Schema({
         type: String,
         required: false
     },
-    senderAccountNo: {
-        type: String,
-        required: false
-    },
+    // senderAccountNo: {
+    //     type: String,
+    //     required: false
+    // },
     recipientAccountNo: {
         type: String,
         required: false

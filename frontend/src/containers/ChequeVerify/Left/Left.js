@@ -7,24 +7,22 @@ import { useState, useEffect } from "react";
 
 const Left = (props) => {
   const [state, setState] = useState({
-    accountVerify: 1,
+    accountVerify: 0,
     amount: "",
     accountNumber: "",
     err: "",
-  })
+    recipientNameCheck: false,
+  });
   const [div, setDiv] = useState(1);
-  useEffect(() => {
-    if (state.err==="" && state.accountVerify === 1) {
-      setDiv(3)
-    }
-  }, [state.err]);
   return (
     <div className={classes.Left}>
-      {div === 1 && <Div1 setDiv={setDiv} />}
+      {div === 1 && (
+        <Div1 setDiv={setDiv} acNo={props.acNo} MICR={props.MICR} />
+      )}
       {div === 2 && <Div2 setDiv={setDiv} state={state} setState={setState} />}
-      {div === 3 && <Div3 setDiv={setDiv} />}
+      {div === 3 && <Div3 setDiv={setDiv} signature={props.signature} />}
     </div>
   );
-}
+};
 
 export default Left;
