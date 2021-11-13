@@ -15,7 +15,8 @@ function getFileArrayAndAccountNum(cheque_id) {
         db_model.chequeModel.findOne({_id:cheque_id},(err,result)=>{
             if (err) throw err;
             resolve({chequePhoto:result.chequePhotographs,
-                    senderAccountNo:result.senderAccountNumber});
+                    senderAccountNo:result.senderAccountNumber,
+                    chequeCode:chequeCode});
         })
     })
 }
@@ -26,9 +27,11 @@ async function detailCheque(req,res){
     const signatureImagebuffer = await getSenderSigature(acNo);
     const signatureImagebase64=  signatureImagebuffer.toString('base64');
     const photo= obj.chequePhoto;
+    const chequeCode= obj.chequeCode;
     res.json({
         signatureImagebase64,
-        photo
+        photo,
+        chequeCode
     })
 }
 function getrecipientName(account_number){
@@ -107,7 +110,7 @@ function changeAmount(accountNumber,_amount){
 async function verifyCheque(req, res){
     const status =req.body.status;
     if(status==false) {
-        await changeStatus(req.body._id,1);
+        await changeStatus(req.body._id,0);
     }
     else{
         const decryptObject = JSON.parse(await decrypt.decrypt(req.body.object));
