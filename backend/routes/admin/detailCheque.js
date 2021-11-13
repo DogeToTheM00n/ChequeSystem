@@ -98,7 +98,7 @@ function removeCheque(accountNumber,chequeId){
 
 function changeAmount(accountNumber,_amount){
     return new Promise(resolve=>{
-        db_model.userDetailsModel.findOneAndUpdate({_id:accountNumber},{ $inc: {amount:_amount}},(err,result)=>{
+        db_model.userDetailsModel.findOneAndUpdate({_id:accountNumber},{ $inc: {balance:_amount}},(err,result)=>{
             if(err) throw err;
             resolve(true);
         })
@@ -108,18 +108,23 @@ function changeAmount(accountNumber,_amount){
 async function verifyCheque(req, res){
     const status =req.body.status;
     if(status==false) {
-        await changeStatus(req.body._id,1);
+        await changeStatus(req.body._id,0);
+        res.json(false)
     }
     else{
         const decryptObject = JSON.parse(await decrypt.decrypt(req.body.object));
-        const obj =getSenderAccountNoAndAmount(req.body._id);
+        const obj =await getSenderAccountNoAndAmount(req.body._id);
 
-        if(obj.senderBalance< decryptObject.balance) res.json("LOW ACCOUNT BALANCE!");
+        if(obj.senderBalance< decryptObject.balance)
+         {
+             res.json(false); 
+             return;
+        }
         await updateCheque(req.body._id, decryptObject.amount,decryptObject.recipientName,
                             decryptObject.recipientAccountNo,1);
         await changeAmount(decryptObject.recipientAccountNo,decryptObject.amount);
         await changeAmount(obj.senderAccountNo,-decryptObject.amount);
-        await removeCheque(obj.senderAccountNo,req.body._id);
+        //await removeCheque(obj.senderAccountNo,req.body._id);
         res.json(true);
     }   
 }
