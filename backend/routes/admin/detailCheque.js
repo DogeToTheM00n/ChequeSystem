@@ -16,7 +16,7 @@ function getFileArrayAndAccountNum(cheque_id) {
             if (err) throw err;
             resolve({chequePhoto:result.chequePhotographs,
                     senderAccountNo:result.senderAccountNumber,
-                    chequeCode:chequeCode});
+                    chequeCode:result.chequeCode});
         })
     })
 }
