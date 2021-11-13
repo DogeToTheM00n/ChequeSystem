@@ -9,17 +9,14 @@ instance.defaults.headers.post["Content-Type"] =
 instance.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 instance.interceptors.request.use(
   (config) => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) {
-      let accessToken = userData.token;
-      if (accessToken) {
-        config.headers = Object.assign(
-          {
-            "x-access-token": accessToken,
-          },
-          config.headers
-        );
-      }
+    let accessToken = JSON.parse(sessionStorage.getItem("token"));
+    if (accessToken) {
+      config.headers = Object.assign(
+        {
+          "x-access-token": accessToken,
+        },
+        config.headers
+      );
     }
     return config;
   },

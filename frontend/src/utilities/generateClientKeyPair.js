@@ -50,7 +50,7 @@ const generateKeyPair = async () => {
     };
   };
 
-  localStorage.setItem("ClientKey", JSON.stringify(privateKey));
+  // localStorage.setItem("ClientKey", JSON.stringify(privateKey));
   const key = await crypto.subtle.exportKey("spki", res.publicKey);
   return abtostr(key);
 };

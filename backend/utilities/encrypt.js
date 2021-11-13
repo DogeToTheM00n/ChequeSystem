@@ -21,7 +21,7 @@ const encryptWithClientPublicKey = async (data, key) => {
     cryptoKey,
     enc.encode(JSON.stringify(data))
   );
-  console.log(ab2str.ab2str(encrypted));
+  // console.log(ab2str.ab2str(encrypted));
   return ab2str.ab2str(encrypted);
 };
 //obj = { username: "abc", password:"abc"}

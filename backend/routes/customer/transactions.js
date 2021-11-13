@@ -20,6 +20,7 @@ function getStatus(chequeId) {
 }
 async function transactions(req, res) {
     const username = req.query.username;
+    console.log(username);
     var chequeArray=[]
     const chequeIdArray = await getChequeIdArray(username);
     

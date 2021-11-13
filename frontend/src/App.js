@@ -13,6 +13,10 @@ import React, { Component } from "react";
 import AdminDashboard from "./containers/AdminDashboard/AdminDashboard";
 class App extends Component {
   componentDidMount() {
+    sessionStorage.clear();
+    setTimeout(()=> {
+      window.location.reload()
+    }, 3600000);
     axios.get("/api/getPublicKey").then((res) => {
       this.props.setServerPublicKey(res.data);
     });

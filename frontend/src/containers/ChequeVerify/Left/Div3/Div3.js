@@ -3,13 +3,13 @@ import classes from "./Div3.module.css";
 import { InputGroup } from "react-bootstrap";
 
 const Div3 = (props) => {
-  const [sigVerify, setSigVerify] = useState(false)
-  
+  const [sigVerify, setSigVerify] = useState(false);
+
   const approveHandler = () => {
-    if(sigVerify){
-      props.approveCheque()
+    if (sigVerify) {
+      props.approveCheque();
     }
-  }
+  };
 
   return (
     <div>
@@ -27,10 +27,17 @@ const Div3 = (props) => {
           src={`data:image/png;base64,${props.signature}`}
           alt="Sign"
         />
-        <InputGroup.Checkbox className={classes.Checkbox} checked={sigVerify} onChange={(evt) => setSigVerify(evt.target.checked)}/>
+        <InputGroup.Checkbox
+          className={classes.Checkbox}
+          checked={sigVerify}
+          onChange={(evt) => setSigVerify(evt.target.checked)}
+        />
       </InputGroup>
       <div className={classes.BtnGroup}>
-        <button className={classes.DeclineBtn} onClick={() => props.declineCheque()}>
+        <button
+          className={classes.DeclineBtn}
+          onClick={() => props.declineCheque()}
+        >
           <i className="fas fa-times"></i> Decline
         </button>
         <button className={classes.NextBtn} onClick={approveHandler}>

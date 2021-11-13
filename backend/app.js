@@ -47,10 +47,15 @@ app.post("/api/userDetails", upload.any(), (req, res) => {
   saveUserDetail.saveUserDetail(req, res);
 });
 
-app.post("/api/depositCheque",jwtHelper.authenticateToken, upload.any(), (req, res) => {
-  // console.log(req.body);
-  cheque.depostCheque(req, res);
-});
+app.post(
+  "/api/depositCheque",
+  jwtHelper.authenticateToken,
+  upload.any(),
+  (req, res) => {
+    // console.log(req.body);
+    cheque.depostCheque(req, res);
+  }
+);
 
 app.post("/api/adminLogin", (req, res) => {
   adminLogin.adminLogin(req, res);
@@ -60,7 +65,7 @@ app.post("/api/admin", (req, res) => {
   saveUserDetail.createAdmin(req, res);
 });
 
-app.get("/api/adminDashboard",jwtHelper.authenticateToken, (req, res) => {
+app.get("/api/adminDashboard", jwtHelper.authenticateToken, (req, res) => {
   ad_details.adminDashboard(req, res);
 });
 
@@ -72,16 +77,16 @@ app.post("/api/login", (req, res) => {
   signupAndLogin.logIn(req, res);
 });
 
-app.get("/api/transactions",jwtHelper.authenticateToken, (req, res) => {
+app.get("/api/transactions", jwtHelper.authenticateToken, (req, res) => {
   // console.log("Hello");
   transactions.transactions(req, res);
 });
 
-app.get("/api/transactionDetail",jwtHelper.authenticateToken, (req, res) => {
+app.get("/api/transactionDetail", jwtHelper.authenticateToken, (req, res) => {
   transactions.transactionDetail(req, res);
 });
 
-app.get("/api/profile",jwtHelper.authenticateToken, (req, res) => {
+app.get("/api/profile", jwtHelper.authenticateToken, (req, res) => {
   profile.profile(req, res);
 });
 
@@ -103,16 +108,16 @@ app.post("/api/captchaVerification", async (req, res) => {
   res.send(verifyCaptcha.data);
 });
 
-app.get("/api/detailedCheque",jwtHelper.authenticateToken, (req, res) => {
+app.get("/api/detailedCheque", jwtHelper.authenticateToken, (req, res) => {
   detailCheque.detailCheque(req, res);
 });
-app.get("/api/recipientName",jwtHelper.authenticateToken, (req, res) => {
+app.get("/api/recipientName", jwtHelper.authenticateToken, (req, res) => {
   detailCheque.recipientName(req, res);
 });
 
-app.post("/api/verifyCheque",jwtHelper.authenticateToken,(req,res)=>{
-  detailCheque.verifyCheque(req,res);
-})
+app.post("/api/verifyCheque", jwtHelper.authenticateToken, (req, res) => {
+  detailCheque.verifyCheque(req, res);
+});
 
 // app.post("/abc", upload.any(),(req, res) => {
 //     const f = req.files[0]

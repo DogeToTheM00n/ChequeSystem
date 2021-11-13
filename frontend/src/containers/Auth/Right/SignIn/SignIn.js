@@ -31,17 +31,23 @@ class SignIn extends Component {
                 obj: encryptedData,
                 public_key: this.props.clientPublicKey,
               });
+              console.log(res.data);
               if (res.data) {
                 // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
                 //   console.log(JSON.parse(decryptedData));
                 // });
+                console.log(res.data);
+                sessionStorage.setItem(
+                  "token",
+                  JSON.stringify(res.data.accessToken)
+                );
                 const user = {
-                  mobileNumber: res.data.mobileNumber,
-                  name: res.data.name,
-                  username: res.data.username,
+                  mobileNumber: res.data.user.mobileNumber,
+                  name: res.data.user.name,
+                  username: res.data.user.username,
                 };
                 this.props.setAuthTrue(user);
-                this.props.setAesKey(res.data.encrypted_aes_key);
+                this.props.setAesKey(res.data.user.encrypted_aes_key);
                 this.props.history.push("/");
               }
             };
@@ -56,12 +62,16 @@ class SignIn extends Component {
                 // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
                 //   console.log(JSON.parse(decryptedData));
                 // });
+                sessionStorage.setItem(
+                  "token",
+                  JSON.stringify(res.data.accessToken)
+                );
                 const user = {
                   name: "",
-                  username: res.data.username,
+                  username: res.data.user.username,
                 };
                 this.props.setAuthTrue(user);
-                this.props.setAesKey(res.data.encrypted_aes_key);
+                this.props.setAesKey(res.data.user.encrypted_aes_key);
                 this.props.history.push("/adminDashboard");
               }
             };
@@ -110,9 +120,9 @@ class SignIn extends Component {
             />
           </Form.Group>
           <ReCAPTCHA
-                sitekey="6Ld-tgodAAAAAIKYDYuoZHEIhpgiLJdJQToCPNw3"
-                onChange={this.onChangeCaptcha}
-                size="normal"
+            sitekey="6Ld-tgodAAAAAIKYDYuoZHEIhpgiLJdJQToCPNw3"
+            onChange={this.onChangeCaptcha}
+            size="normal"
           />
           {this.props.location.pathname === "/auth" ? (
             <p className={classes.P} onClick={this.props.changeAuthMethod}>
