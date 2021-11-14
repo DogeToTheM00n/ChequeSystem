@@ -68,10 +68,10 @@ class SignIn extends Component {
                 );
                 const user = {
                   name: "",
-                  username: res.data.user.username,
+                  username: res.data.username,
                 };
                 this.props.setAuthTrue(user);
-                this.props.setAesKey(res.data.user.encrypted_aes_key);
+                this.props.setAesKey(res.data.encrypted_aes_key);
                 this.props.history.push("/adminDashboard");
               }
             };
