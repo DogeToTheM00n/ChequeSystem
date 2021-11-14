@@ -1,1 +1,4 @@
 cheque-ocr/
+.env
+node_modules/
+test/

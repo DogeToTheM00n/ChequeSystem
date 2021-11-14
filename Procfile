@@ -1,1 +1,1 @@
-node backend/app.js
+node app.js

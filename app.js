@@ -22,6 +22,9 @@ const aesEncy = require("./utilities/encrypt&DecryptAes.js");
 const jwtHelper = require("./routes/auth/jwt.js");
 
 const app = express();
+
+app.use(express.static('./frontend/build'))
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
@@ -124,6 +127,11 @@ app.post("/api/verifyCheque", jwtHelper.authenticateToken, (req, res) => {
 //     const f = req.files[0]
 //     aesEncy.all(f.buffer)
 // })
+
+app.get("*",(req,res)=>{
+  res.sendFile('./frontend/build/index.')
+  })
+  
 
 app.listen(8080, () => {
   console.log("Pram Server is running on port 8080");
