@@ -98,7 +98,7 @@ async function depostCheque(req, response) {
   var micr;
   var rs;
   axios
-    .post("http://localhost:9000/secret/ocr", {
+    .post("https://pramocr.herokuapp.com/secret/ocr", {
       image: arrayBase64[0],
     })
     .then(async (res) => {

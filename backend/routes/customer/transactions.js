@@ -13,9 +13,12 @@ function getStatus(chequeId) {
     return new Promise(resolve => {
         db_model.chequeModel.findOne({ _id: chequeId }, (err, cheque) => {
             if (err) throw err;
-            console.log(cheque);
+            console.log("CHEQUE_iD: ",cheque.chequeStatus);
+            if(cheque!=null)
             resolve(cheque.chequeStatus);
+            else resolve(null)
         })
+        
     })
 }
 async function transactions(req, res) {

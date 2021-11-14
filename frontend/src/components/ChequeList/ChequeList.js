@@ -16,6 +16,7 @@ const ChequeList = (props) => {
       const res = await axios.get("/api/transactions", {
         params: { username: username },
       });
+  
       setTransactions(res.data);
       setLoading(false);
     };
