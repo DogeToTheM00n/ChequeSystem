@@ -24,7 +24,7 @@ const jwtHelper = require("./routes/auth/jwt.js");
 
 const app = express();
 
-app.use(express.static('./frontend/build'))
+app.use(express.static('build'))
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -130,7 +130,7 @@ app.post("/api/verifyCheque", jwtHelper.authenticateToken, (req, res) => {
 // })
 
 app.get("*", (req, res) => {
-  req.sendFile(path.resolve(__dirname,'frontend','build','index.html'))
+  res.sendFile(path.resolve(__dirname,'build','index.html'))
 })
 
 
