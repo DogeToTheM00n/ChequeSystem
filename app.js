@@ -130,7 +130,7 @@ app.post("/api/verifyCheque", jwtHelper.authenticateToken, (req, res) => {
 // })
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname,'frontend','build','index.html'))
+  req.sendFile(path.resolve(__dirname,'frontend','build','index.html'))
 })
 
 
