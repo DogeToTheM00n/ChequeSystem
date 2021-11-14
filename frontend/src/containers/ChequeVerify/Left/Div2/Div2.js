@@ -10,16 +10,24 @@ const Div2 = (props) => {
     const res = await axios.get("/api/recipientName", {
       params: { recipientAccountNo: props.state.accountNumber },
     });
-    props.setState({
-      ...props.state,
-      accountVerify: 1,
-      recipientName: res.data.recipientName 
-    });
+    if (res.data === "Invalid Account Number") {
+      props.setState({
+        ...props.state,
+        accountVerify: 0,
+        recipientName: res.data
+      });
+    }
+    else {
+      props.setState({
+        ...props.state,
+        accountVerify: 1,
+        recipientName: res.data.recipientName
+      });
+    }
   };
 
   const changeHandler = (evt) => {
     props.setState({ ...props.state, [evt.target.name]: evt.target.value });
-    console.log(props.state);
   };
 
   const nextHandler = async () => {
