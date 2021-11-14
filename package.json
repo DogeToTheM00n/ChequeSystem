@@ -1,8 +1,11 @@
 {
   "name": "backend",
+  "version": "1.0.0",
   "description": "",
-  "version": "16.11.1",
   "main": "index.js",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start":"node app.js",
     "pram":"nodemon app.js"
