@@ -43,8 +43,9 @@ function getrecipientName(account_number) {
       { _id: account_number },
       (err, result) => {
         if (err) throw err;
-        // console.log(result);
-        resolve(result.accountHolderName);
+        // console.log(result);accountHolderName
+        if(result==null) resolve(null);
+        else {resolve(result.accountHolderName);}
       }
     );
     // resolve(null);
@@ -53,6 +54,7 @@ function getrecipientName(account_number) {
 
 async function recipientName(req, res) {
   const name = await getrecipientName(req.query.recipientAccountNo);
+  if(name==null) {res.json("Invalid Account Number"); return;}
   res.json({ recipientName: name });
 }
 
@@ -138,11 +140,13 @@ async function verifyCheque(req, res) {
   const status = req.body.status;
   if (status == false) {
     await changeStatus(req.body._id, 0);
+    res.json(false);
   } else {
     const decryptObject = JSON.parse(await decrypt.decrypt(req.body.object));
     // console.log(decryptObject.recipientAccountNo)
     const obj = await getSenderAccountNoAndAmount(req.body._id);
     if (obj.senderBalance < decryptObject.amount) {
+      await changeStatus(req.body._id, 0);
       res.json(false);
       return
     }

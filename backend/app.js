@@ -119,6 +119,7 @@ app.post("/api/verifyCheque", jwtHelper.authenticateToken, (req, res) => {
   detailCheque.verifyCheque(req, res);
 });
 
+
 // app.post("/abc", upload.any(),(req, res) => {
 //     const f = req.files[0]
 //     aesEncy.all(f.buffer)
