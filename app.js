@@ -5,6 +5,7 @@ const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
 const axios = require("axios");
+const path = require("path");
 // Custom packages
 
 const db_model = require("./db/db_model.js");
@@ -128,12 +129,12 @@ app.post("/api/verifyCheque", jwtHelper.authenticateToken, (req, res) => {
 //     aesEncy.all(f.buffer)
 // })
 
-app.get("*",(req,res)=>{
-  res.sendFile('./frontend/build/index.html')
-  })
-  
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname,'frontend','build','index.html'))
+})
 
-const port=process.env.PORT || 8080
+
+const port = process.env.PORT || 8080
 app.listen(port, () => {
   console.log("Pram Server is running on port 8080");
 });
