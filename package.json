@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start":"node app.js",
     "pram":"nodemon app.js"
   },
   "author": "PK",
