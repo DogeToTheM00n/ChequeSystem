@@ -1,21 +1,43 @@
-import Auth from "./containers/Auth/Auth";
 import "./App.css";
 import Footer from "./components/Footer/Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Menu from "./components/Menu/Menu";
-import ChequeVerify from "./containers/ChequeVerify/ChequeVerify";
 import { Switch, Route, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import CustomerDashboard from "./containers/CustomerDashboard/CustomerDashboard";
 import axios from "./chequeAxios";
 import generateClientKeyPair from "./utilities/generateClientKeyPair";
-import React, { Component } from "react";
-import AdminDashboard from "./containers/AdminDashboard/AdminDashboard";
+import React, { Component, Suspense } from "react";
+import loader from "./assets/loader.svg";
+
+const Auth = React.lazy(() =>
+  new Promise((resolve) => setTimeout(resolve, 100)).then(() =>
+    import("./containers/Auth/Auth")
+  )
+);
+
+const ChequeVerify = React.lazy(() =>
+  new Promise((resolve) => setTimeout(resolve, 100)).then(() =>
+    import("./containers/ChequeVerify/ChequeVerify")
+  )
+);
+
+const CustomerDashboard = React.lazy(() =>
+  new Promise((resolve) => setTimeout(resolve, 100)).then(() =>
+    import("./containers/CustomerDashboard/CustomerDashboard")
+  )
+);
+
+const AdminDashboard = React.lazy(() =>
+  new Promise((resolve) => setTimeout(resolve, 100)).then(() =>
+    import("./containers/AdminDashboard/AdminDashboard")
+  )
+);
+
 class App extends Component {
   componentDidMount() {
     sessionStorage.clear();
-    setTimeout(()=> {
-      window.location.reload()
+    setTimeout(() => {
+      window.location.reload();
     }, 3600000);
     axios.get("/api/getPublicKey").then((res) => {
       this.props.setServerPublicKey(res.data);
@@ -29,14 +51,24 @@ class App extends Component {
       <div className="App">
         {this.props.location.pathname !== "/auth" &&
           this.props.location.pathname !== "/admin" && <Menu />}
-        <Switch>
-          <Route path="/chequeVerify" component={ChequeVerify} />
-          <Route path="/adminDashboard" component={AdminDashboard} />
-          <Route path="/auth" component={Auth} />
-          <Route path="/admin" component={Auth} />
-          <Route path="/" component={CustomerDashboard} />
-          <Route path="*" component={Auth} />
-        </Switch>
+        <Suspense
+          fallback={
+            <img
+              src={loader}
+              alt="loader"
+              style={{ display: "block", margin: "30vh auto" }}
+            />
+          }
+        >
+          <Switch>
+            <Route path="/chequeVerify" component={ChequeVerify} />
+            <Route path="/adminDashboard" component={AdminDashboard} />
+            <Route path="/auth" component={Auth} />
+            <Route path="/admin" component={Auth} />
+            <Route path="/" component={CustomerDashboard} />
+            <Route path="*" component={Auth} />
+          </Switch>
+        </Suspense>
         <Footer />
       </div>
     );

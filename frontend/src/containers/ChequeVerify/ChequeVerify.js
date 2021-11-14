@@ -5,10 +5,12 @@ import Left from "./Left/Left";
 import { useHistory } from "react-router";
 import axios from "../../chequeAxios";
 import { useSelector } from "react-redux";
+import loader from "../../assets/loader.svg";
 import str2ab from "../../utilities/stringToArrayBuffer";
 import decryptImageWithAesKey from "../../utilities/decryptFile";
 
 const ChequeVerify = () => {
+  const [loading, setLoading] = useState(true);
   const history = useHistory();
   const auth = useSelector((state) => state.auth);
   const encryptedAesKey = useSelector((state) => state.encryptedAesKey);
@@ -28,6 +30,7 @@ const ChequeVerify = () => {
   }
   useEffect(() => {
     const func = async () => {
+      setLoading(true);
       let searchParams = new URLSearchParams(history.location.search);
       for (const [key, value] of searchParams) {
         const res = await axios.get("/api/detailedCheque", {
@@ -48,13 +51,21 @@ const ChequeVerify = () => {
         setSignature(res.data.signatureImagebase64);
         setAcNo(res.data.acNo);
         setMICR(res.data.chequeCode);
+        setLoading(false);
       }
     };
     func();
   }, []);
   return (
     auth &&
-    user.name === "" && (
+    user.name === "" &&
+    (loading ? (
+      <img
+        src={loader}
+        alt="loader"
+        style={{ display: "block", margin: "10vh auto" }}
+      />
+    ) : (
       <div className={classes.ChequeVerify}>
         <p className={classes.P}>Transaction ID: {id}</p>
         <div className={classes.Parent}>
@@ -71,7 +82,7 @@ const ChequeVerify = () => {
           </div>
         </div>
       </div>
-    )
+    ))
   );
 };
 

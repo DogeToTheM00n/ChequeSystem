@@ -3,18 +3,21 @@ import { useState, useEffect } from "react";
 import classes from "./ChequeList.module.css";
 import axios from "../../chequeAxios";
 import { useSelector } from "react-redux";
+import loader from "../../assets/loader.svg";
 
 const ChequeList = (props) => {
   const [filter, setFilter] = useState(2);
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const username = useSelector((state) => state.user.username);
   useEffect(() => {
     const func = async () => {
+      setLoading(true);
       const res = await axios.get("/api/transactions", {
         params: { username: username },
       });
       setTransactions(res.data);
-      console.log(res.data)
+      setLoading(false);
     };
     func();
   }, [props.reload]);
@@ -32,7 +35,7 @@ const ChequeList = (props) => {
             className={filter === 1 ? classes.Button : classes.ButtonInactive}
             onClick={() => setFilter(1)}
           >
-            Active
+            Approved
           </div>
           <div
             className={filter === 0 ? classes.Button : classes.ButtonInactive}
@@ -41,15 +44,23 @@ const ChequeList = (props) => {
             Declined
           </div>
         </div>
-        {transactions.map(
-          (transaction) =>
-            transaction.chequeStatus === filter && (
-              <ChequeListItem
-                status={transaction.chequeStatus}
-                id={transaction._id}
-                key={transaction._id}
-              />
-            )
+        {loading ? (
+          <img
+            src={loader}
+            alt="loader"
+            style={{ display: "block", margin: "10vh auto" }}
+          />
+        ) : (
+          transactions.map(
+            (transaction) =>
+              transaction.chequeStatus === filter && (
+                <ChequeListItem
+                  status={transaction.chequeStatus}
+                  id={transaction._id}
+                  key={transaction._id}
+                />
+              )
+          )
         )}
       </div>
     </>

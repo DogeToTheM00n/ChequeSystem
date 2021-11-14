@@ -9,7 +9,9 @@ const Menu = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const handleClose = () => setShowProfileModal(false);
   const handleShow = () => setShowProfileModal(true);
-  const username = useSelector((state) => state.user?state.user.username:"");
+  const username = useSelector((state) =>
+    state.user ? state.user.username : ""
+  );
   const pathname = useHistory().location.pathname;
   const auth = useSelector((state) => state.auth);
   return (
@@ -49,6 +51,17 @@ const Menu = () => {
               )}
               &nbsp;
               <span>Hi, {username}</span>
+              &nbsp; &nbsp; &nbsp;
+              <i
+                className="fas fa-sign-out-alt"
+                style={{
+                  color: "#871f42",
+                  fontSize: "1.5vw",
+                  verticalAlign: "middle",
+                  cursor: "pointer",
+                }}
+                onClick={() => window.location.reload()}
+              ></i>
             </Navbar.Text>
           </Navbar.Collapse>
         </Navbar>
