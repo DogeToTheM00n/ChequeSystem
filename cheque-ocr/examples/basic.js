@@ -48,8 +48,8 @@ app.post('/secret/ocr', upload.any(), async (req, res) => {
   });
 })
 
-
-app.listen('9000', (err) => {
+const port  = process.env.PORT || 9000
+app.listen(port, (err) => {
   if (err) throw err;
   console.log("OCR Server started successfully")
 })
