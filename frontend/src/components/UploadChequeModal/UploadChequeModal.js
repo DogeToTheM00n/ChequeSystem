@@ -7,6 +7,7 @@ import decryptImageWithAesKey from "../../utilities/decryptFile";
 import axios from "../../chequeAxios";
 import encrypt from "../../utilities/encrypt";
 import ab2str from "../../utilities/arrayBufferToString";
+import loader from "../../assets/loader.svg";
 
 const UploadChequeModal = (props) => {
   const [validated, setValidated] = useState(false);
@@ -14,9 +15,10 @@ const UploadChequeModal = (props) => {
   const [backImage, setBackImage] = useState();
   const aesKey = useSelector((state) => state.encryptedAesKey);
   const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
   const serverPublicKey = useSelector((state) => state.key);
   const formRef = useRef(null);
-  const [depositError, setDepositError] = useState("")
+  const [depositError, setDepositError] = useState("");
   const onFrontImageChange = (event) => {
     setFrontImage(event.target.files[0]);
   };
@@ -25,6 +27,7 @@ const UploadChequeModal = (props) => {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const form = event.currentTarget;
     setValidated(true);
     if (form.checkValidity() === false) {
@@ -63,22 +66,25 @@ const UploadChequeModal = (props) => {
       // document.querySelector(
       //   "body"
       // ).innerHTML = `<img src="data:image/png;base64,${decryptedImg2}"/>`;
-      const userData = await encrypt({ username: user.username, cheque_code: "-1" }, serverPublicKey);
+      const userData = await encrypt(
+        { username: user.username, cheque_code: "-1" },
+        serverPublicKey
+      );
       const data = {
         images: [ab2str(encryptedBufferImg1), ab2str(encryptedBufferImg2)],
         obj: userData,
       };
       const result = await axios.post("/api/depositCheque", data);
-      if(result.data=="Cheque deposited successfully"){
-        setValidated(false)
-        props.handleClose()
-        props.setReload(!props.reload)
-      }
-      else{
-        setValidated(false)
-        setDepositError(result.data)
+      if (result.data == "Cheque deposited successfully") {
+        setValidated(false);
+        props.handleClose();
+        props.setReload(!props.reload);
+      } else {
+        setValidated(false);
+        setDepositError(result.data);
       }
     }
+    setLoading(false);
   };
   return (
     <Modal
@@ -100,8 +106,20 @@ const UploadChequeModal = (props) => {
         ></i>
       </Modal.Header>
       <Modal.Body>
-        <Form ref={formRef} noValidate validated={validated} onSubmit={handleSubmit}>
-          {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+        {loading ? (
+          <img
+            src={loader}
+            alt="loader"
+            style={{ display: "block", margin: "10vh auto" }}
+          />
+        ) : (
+          <Form
+            ref={formRef}
+            noValidate
+            validated={validated}
+            onSubmit={handleSubmit}
+          >
+            {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>Cheque Number</Form.Label>
             <Form.Control
               required
@@ -111,20 +129,27 @@ const UploadChequeModal = (props) => {
               onChange={onChangeChequeNumber}
             />
           </Form.Group> */}
-          <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Front Image</Form.Label>
-            <Form.Control required type="file" onChange={onFrontImageChange} />
-          </Form.Group>
-          <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Back Image</Form.Label>
-            <Form.Control required type="file" onChange={onBackImageChange} />
-          </Form.Group>
-          {depositError?<p className={classes.Error}>{depositError}</p>:null}
-          <Button type="submit" className={classes.BootstrapButton}>
-            Deposit
-          </Button>
-          {/* <input type="submit" className={classes.Button}>Deposit</input> */}
-        </Form>
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Front Image</Form.Label>
+              <Form.Control
+                required
+                type="file"
+                onChange={onFrontImageChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Back Image</Form.Label>
+              <Form.Control required type="file" onChange={onBackImageChange} />
+            </Form.Group>
+            {depositError ? (
+              <p className={classes.Error}>{depositError}</p>
+            ) : null}
+            <Button type="submit" className={classes.BootstrapButton}>
+              Deposit
+            </Button>
+            {/* <input type="submit" className={classes.Button}>Deposit</input> */}
+          </Form>
+        )}
       </Modal.Body>
     </Modal>
   );

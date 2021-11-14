@@ -4,19 +4,23 @@ import classes from "./SignIn.module.css";
 import { connect } from "react-redux";
 import axios from "../../../../chequeAxios";
 import Form from "react-bootstrap/Form";
-import decrypt from "../../../../utilities/decrypt";
+// import decrypt from "../../../../utilities/decrypt";
 import { withRouter } from "react-router";
+import loader from "../../../../assets/loader.svg";
 import ReCAPTCHA from "react-google-recaptcha";
 
 class SignIn extends Component {
   state = {
     username: "",
     password: "",
+    loading: false,
+    error: false,
   };
   change = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
   submit = (event) => {
+    this.setState({ loading: true });
     if (this.state.username !== "" && this.state.password !== "") {
       event.preventDefault();
       const data = {
@@ -27,12 +31,15 @@ class SignIn extends Component {
         (encryptedData) => {
           if (this.props.location.pathname === "/auth") {
             const req = async () => {
-              const res = await axios.post("/api/login", {
-                obj: encryptedData,
-                public_key: this.props.clientPublicKey,
-              });
-              console.log(res.data);
-              if (res.data) {
+              const res = await axios
+                .post("/api/login", {
+                  obj: encryptedData,
+                  public_key: this.props.clientPublicKey,
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              if (res && res.data) {
                 // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
                 //   console.log(JSON.parse(decryptedData));
                 // });
@@ -46,19 +53,26 @@ class SignIn extends Component {
                   name: res.data.user.name,
                   username: res.data.user.username,
                 };
+                this.setState({ loading: false });
                 this.props.setAuthTrue(user);
                 this.props.setAesKey(res.data.user.encrypted_aes_key);
                 this.props.history.push("/");
+              } else {
+                this.setState({ error: true, loading: false });
               }
             };
             req();
           } else {
             const req = async () => {
-              const res = await axios.post("/api/adminLogin", {
-                obj: encryptedData,
-                public_key: this.props.clientPublicKey,
-              });
-              if (res.data) {
+              const res = await axios
+                .post("/api/adminLogin", {
+                  obj: encryptedData,
+                  public_key: this.props.clientPublicKey,
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              if (res && res.data) {
                 // decrypt(res.data.encrypted_aes_key).then((decryptedData) => {
                 //   console.log(JSON.parse(decryptedData));
                 // });
@@ -66,13 +80,17 @@ class SignIn extends Component {
                   "token",
                   JSON.stringify(res.data.accessToken)
                 );
+                console.log(res.data);
                 const user = {
                   name: "",
-                  username: res.data.user.username,
+                  username: res.data.username,
                 };
+                this.setState({ loading: false });
                 this.props.setAuthTrue(user);
-                this.props.setAesKey(res.data.user.encrypted_aes_key);
+                this.props.setAesKey(res.data.encrypted_aes_key);
                 this.props.history.push("/adminDashboard");
+              } else {
+                this.setState({ error: true, loading: false });
               }
             };
             req();
@@ -83,7 +101,13 @@ class SignIn extends Component {
   };
   render() {
     console.log(this.props.location.pathname);
-    return (
+    return this.state.loading ? (
+      <img
+        src={loader}
+        alt="loader"
+        style={{ display: "block", margin: "10vh auto" }}
+      />
+    ) : (
       <>
         {this.props.location.pathname === "/auth" ? (
           <h1>Sign In to Apna Cheques</h1>
@@ -92,6 +116,9 @@ class SignIn extends Component {
           <h1>Log In as Admin</h1>
         ) : null}
         <Form className={classes.SignIn}>
+          {this.state.error && (
+            <p style={{ color: "#dc3546" }}>*Invalid credentials</p>
+          )}
           <p style={{ color: "#dc3546" }}>*All fields are required</p>
           <Form.Group className="mb-4" controlId="username">
             <Form.Label>Username</Form.Label>

@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "../../../chequeAxios";
 import { useHistory } from "react-router";
+import loader from "../../../assets/loader.svg";
 
 const Left = (props) => {
   const [state, setState] = useState({
@@ -24,9 +25,11 @@ const Left = (props) => {
     acNoVerify: false,
     cCodeVerify: false,
   });
+  const [loading, setLoading] = useState(false);
   const public_key = useSelector((state) => state.key);
   const history = useHistory();
   const approveCheque = async () => {
+    setLoading(true);
     let reqObj = {
       status: true,
       _id: props.chequeCode,
@@ -43,10 +46,12 @@ const Left = (props) => {
       console.log(res);
     };
     req();
+    setLoading(false);
     history.push("/adminDashboard");
   };
 
   const declineCheque = async () => {
+    setLoading(true);
     let reqObj = {
       status: false,
       _id: props.chequeCode,
@@ -56,6 +61,7 @@ const Left = (props) => {
       console.log(res);
     };
     req();
+    setLoading(false);
     history.push("/adminDashboard");
   };
   useEffect(() => {
@@ -68,7 +74,13 @@ const Left = (props) => {
     }
   }, [state.err]);
   const [div, setDiv] = useState(1);
-  return (
+  return loading ? (
+    <img
+      src={loader}
+      alt="loader"
+      style={{ display: "block", margin: "10vh auto" }}
+    />
+  ) : (
     <div className={classes.Left}>
       {div === 1 && (
         <Div1
