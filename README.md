@@ -87,6 +87,7 @@ End-to-end encrypted automated cheque deposit system
 - [Project Presentation](https://prezi.com/view/KrlDuxBcXvftvp73c4gT/)
 - [Project DFD](https://drive.google.com/file/d/1UV_R3jx65Bk0JpX6y_LASgqLbSH_22xr/view?usp=sharing)
 - [Sample Cheque Images](https://github.com/DogeToTheM00n/ChequeSystem/tree/main/cheque-ocr/test/fixtures)
+- [Postman API collection](https://www.getpostman.com/collections/a79895608f8048d1eb6d)
 
 ## Need help?
 
