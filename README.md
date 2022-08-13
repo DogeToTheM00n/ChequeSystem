@@ -10,9 +10,38 @@ End-to-end encrypted automated cheque deposit system
 
 ## Features and Interfaces
 
-1. Landing Page and Feeback Form
+1. Deposit Cheque by uploading images
+<br></br>
+![Screenshot 2022-08-13 114342](https://user-images.githubusercontent.com/56033256/184471768-df3fe9cf-0a68-4139-9d79-fcbef303d164.jpg)
 
-2. Home page 
+2. Home page
+<br></br>
+![Screenshot 2022-08-13 114517](https://user-images.githubusercontent.com/56033256/184471778-f2b548b3-e66e-4fe6-9f87-f004bb4dba89.jpg)
+3. View uploaded images for a cheque
+<br></br>
+![Screenshot 2022-08-13 114539](https://user-images.githubusercontent.com/56033256/184471798-c6e54b54-2b89-4874-9a07-8b2e17f98d32.jpg)
+4. Login page for admin(bank official)
+<br></br>
+![Screenshot 2022-08-13 114650](https://user-images.githubusercontent.com/56033256/184471828-a85c514f-09d0-4961-a9f5-79d6ab0efce5.jpg)
+5. Admin home page
+<br></br>
+![Screenshot 2022-08-13 114708](https://user-images.githubusercontent.com/56033256/184471845-8d50be42-7e46-4fda-a022-cc12d200344b.jpg)
+6. Verify cheque as "bounced" or "accepted" interface
+<br></br>
+![Screenshot 2022-08-13 114751](https://user-images.githubusercontent.com/56033256/184471877-52b0504c-d4f5-49bb-a879-0a5353308c85.jpg)
+7. Details of the transaction are entered by bank officials
+<br></br>
+![Screenshot 2022-08-13 114836](https://user-images.githubusercontent.com/56033256/184471897-872575fe-9037-43f9-a50a-b6a81b4d8043.jpg)
+8. Customer can check approved/declined cheques
+<br></br>
+![Screenshot 2022-08-13 114938](https://user-images.githubusercontent.com/56033256/184471917-59637ec5-30af-4606-9909-cff5aafd7b1d.jpg)
+9. A cheque already deposited can't be deposited again
+<br></br>
+![Screenshot 2022-08-13 115007](https://user-images.githubusercontent.com/56033256/184471936-1bc48e1c-64ef-44a9-8605-26389f4149f9.jpg)
+10. Customer can view his/her profile
+<br></br>
+![Screenshot 2022-08-13 115030](https://user-images.githubusercontent.com/56033256/184471946-55ea6d4e-5547-456a-b925-120a5b06fb67.jpg)
+
 
 ### Tools and Languages: 
 <p align="left"> 
@@ -32,10 +61,13 @@ End-to-end encrypted automated cheque deposit system
 <img src="https://jwt.io/img/pic_logo.svg" alt="heroku" width="40" height="40"/>
 </p>
 
-## Points to remember while testing the app
+## Sample login details as a customer
+- Username: rohitkv77
+- Password: Qwerty@12
 
-## Instructions
-
+## Sample login details as an admin
+- Username: admin
+- Password: Qwerty@12
 
 ## Useful Links
 
