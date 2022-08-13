@@ -86,6 +86,7 @@ End-to-end encrypted automated cheque deposit system
 - [DB Schema and API Design Doc](https://docs.google.com/document/d/1IiMXk_ftI4nX3rdm8YBpWHlgXf9zm4ygAwmi0yjd6-0/edit?usp=sharing)
 - [Project Presentation](https://prezi.com/view/KrlDuxBcXvftvp73c4gT/)
 - [Project DFD](https://drive.google.com/file/d/1UV_R3jx65Bk0JpX6y_LASgqLbSH_22xr/view?usp=sharing)
+- [Sample Cheque Images](https://github.com/DogeToTheM00n/ChequeSystem/tree/main/cheque-ocr/test/fixtures)
 
 ## Need help?
 
